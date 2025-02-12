@@ -1,0 +1,50 @@
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Frontend
+# Dependencies
+client/node_modules/
+client/build/
+client/dist/
+client/.next/
+client/.env*
+client/.vite/
+
+# Backend
+# Dependencies
+/backend/node_modules/
+
+# Logs
+*.log
+
+# Configure files
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Database
+/db.sqlite
+/db/
+
+# Other files
+*.pid
+*.seed
+
+# Temporary files
+.DS_Store
+*.swp
+*.swo
+
+# IDE and Editor directories
+.idea/
+.vscode/
+
+# System files
+.DS_Store
