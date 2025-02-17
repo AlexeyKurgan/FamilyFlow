@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import { useEffect, useRef } from "react";
-import { FaRegWindowClose } from "react-icons/fa";
 import { links } from "../constants/links";
 import { NavLink } from "react-router-dom";
+import { FaRegWindowClose } from "../../shared/react-icons/icons";
 import Logo from "../../shared/components/Logo";
 
 interface ILandingNavigationProps {
@@ -17,9 +17,11 @@ const MobileLandingNavigation = ({
   const isFirstRender = useRef(true);
 
   useEffect(() => {
-    isMenuOpen
-      ? (document.body.style.overflow = "hidden")
-      : (document.body.style.overflow = "");
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
 
     return () => {
       document.body.style.overflow = "";
@@ -29,15 +31,16 @@ const MobileLandingNavigation = ({
   useEffect(() => {
     isFirstRender.current = false;
   }, []);
+
   return (
     <div
-      className={clsx("absolute left-0 top-0 w-full bg-white z-1 h-dvh", {
+      className={clsx("absolute pt-18 left-0 top-0 w-full bg-white z-1 h-dvh", {
         invisible: isFirstRender.current,
         "animate-back-from-left": isMenuOpen,
         "animate-back-to-left": !isMenuOpen,
       })}
     >
-      <ul className="pt-18 h-full">
+      <ul className=" h-full">
         {links.map(({ text, url }) => (
           <li className="" key={url}>
             <NavLink

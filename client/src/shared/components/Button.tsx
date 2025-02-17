@@ -1,13 +1,19 @@
 const Button = ({
   children,
   className,
+  type,
+  onClick,
 }: {
   children: React.ReactNode;
   className?: string;
+  type: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
+  onClick?: () => void;
 }) => {
   return (
     <>
       <button
+        type={type}
+        onClick={onClick}
         className={`
             border-2
             border-transparent
@@ -25,7 +31,6 @@ const Button = ({
             transition duration-300
             ease-linear
             ${className}`}
-        type="button"
       >
         {children}
       </button>

@@ -1,13 +1,20 @@
-import { HiGlobeAlt } from "react-icons/hi";
-
-import { RxHamburgerMenu } from "react-icons/rx";
+import { HiGlobeAlt, RxHamburgerMenu } from "../../shared/react-icons/icons";
 import Button from "../../shared/components/Button";
 import LandingNavigation from "./LandingNavigtion";
 import Logo from "../../shared/components/Logo";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const navigateToLogin = () => {
+    navigate("/auth");
+  };
+  const navigateToSignUp = () => {
+    navigate("/auth/sign-up");
+  };
 
   const handleOpenBurgerMenu = () => {
     setIsMenuOpen(true);
@@ -47,10 +54,19 @@ const Header = () => {
         <span className="ml-1">EN</span>
       </div>
 
-      <Button className="bg-amber-400 hover:scale-[1.1] box-border max-w-[125px] mr-4 max-sm:max-w-28">
+      <Button
+        type="button"
+        className="bg-amber-400 mr-[25px] hover:scale-[1.1] box-border max-w-[125px] max-sm:max-w-28"
+        onClick={navigateToLogin}
+      >
         Login
       </Button>
-      <Button className="bg-black text-white max-w-[125px] box-border border-amber-400 hover:scale-[1.1] max-sm:max-w-28">
+
+      <Button
+        type="button"
+        className="bg-black text-white max-w-[125px] box-border border-amber-400 hover:scale-[1.1] max-sm:max-w-28"
+        onClick={navigateToSignUp}
+      >
         Sign up
       </Button>
     </header>
