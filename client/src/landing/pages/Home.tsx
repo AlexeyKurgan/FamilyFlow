@@ -5,7 +5,7 @@ import IllustrationGirlSVG from "../components/icons/IllustrationGirl";
 import IllustrationMenSVG from "../components/icons/IllustrationMen";
 import PlaneSVG from "../components/icons/Plane";
 import LineDecorSVG from "../components/icons/LineDecor";
-import { GoArrowRight } from "react-icons/go";
+import { GoArrowRight } from "../../shared/react-icons/icons";
 
 const Home = () => {
   return (
@@ -31,6 +31,7 @@ const Home = () => {
             </p>
             <div className="w-[220px] p-5 relative max-sm:flex max-sm:justify-center max-sm:w-full">
               <Button
+                type="button"
                 className="text-lg font-bold bg-amber-400 
                                 hover:scale-[1.1] pl-7 justify-start relative max-sm:max-w-[180px]"
               >

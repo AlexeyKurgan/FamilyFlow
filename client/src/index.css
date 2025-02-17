@@ -5,7 +5,3 @@
 .slow-spin {
   animation: spin 3s linear infinite;
 }
-
-/* a.active {
-  color: red;
-} */
