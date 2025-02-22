@@ -4,6 +4,10 @@ import { lazy, Suspense } from "react";
 // Components
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import Loading from "./shared/utils/loader/Loading";
+import { useSelector } from "react-redux";
+import { RootState } from "./store/store";
+import AlertMUI from "./shared/components/alerts/Alert";
+import PrivateRoute from "./shared/components/PrivateRoute";
 
 // Lazy loading
 // Landing Pages
@@ -25,6 +29,10 @@ const AuthLayout = lazy(() => import("./auth/AuthLayout"));
 const AppLayout = lazy(() => import("./app/AppLayout"));
 
 function App() {
+  const { show, message, severity } = useSelector(
+    (state: RootState) => state.alert
+  );
+
   return (
     <Suspense
       fallback={
@@ -41,13 +49,22 @@ function App() {
           <Route path="sign-up" element={<Registration />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
         </Route>
-        <Route path={"dashboard"} element={<AppLayout />}>
+        <Route
+          path={"dashboard"}
+          element={
+            <PrivateRoute>
+              <AppLayout />
+            </PrivateRoute>
+          }
+        >
           <Route index element={<DashboardPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+
+      {show && <AlertMUI message={message} severity={severity} show={show} />}
     </Suspense>
   );
 }

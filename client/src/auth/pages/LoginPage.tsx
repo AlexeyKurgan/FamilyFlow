@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import CustomTooltip from "../../shared/components/Tooltip";
+import CustomTooltip from "../../shared/components/tooltip/Tooltip";
 import AuthForm from "../components/AuthForm";
-import { AuthMode } from "../constants/AuthMode";
+import { AuthMode } from "../constants/authMode";
 import { GoArrowRight } from "../../shared/react-icons/icons";
 
 const LoginPage = () => {
@@ -16,7 +16,7 @@ const LoginPage = () => {
         <CustomTooltip
           placement="bottom"
           title="Back Home"
-          className="absolute top-5 left-5 rotate-180"
+          className="top-5 left-5 rotate-180"
           component={Link}
           pathUrl={"/"}
         >

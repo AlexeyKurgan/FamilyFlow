@@ -11,7 +11,6 @@ const Home = () => {
   return (
     <section className="relative">
       <h1 className="invisible">Landing</h1>
-
       <div
         className="flex gap-5 relative 
                  max-[1328px]:flex-col"
