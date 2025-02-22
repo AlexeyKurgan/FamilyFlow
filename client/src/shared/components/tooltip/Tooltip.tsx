@@ -1,8 +1,9 @@
 import { IconButton, Tooltip } from "@mui/material";
 
-import ITooltip from "../types/tooltip";
+import ITooltip from "../../types/tooltip";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
+import styles from "./tooltip.module.css";
 
 const CustomTooltip = ({
   title,
@@ -18,7 +19,10 @@ const CustomTooltip = ({
   return (
     <Tooltip title={title} placement={placement}>
       <IconButton
-        class={clsx("text-lg text-black cursor-pointer", className)}
+        className={clsx(
+          `${styles["base-tooltip"]} text-lg text-black cursor-pointer`,
+          className
+        )}
         onClick={onClick}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}

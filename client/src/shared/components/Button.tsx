@@ -2,18 +2,22 @@ const Button = ({
   children,
   className,
   type,
+  disabled,
   onClick,
 }: {
   children: React.ReactNode;
   className?: string;
   type: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
   onClick?: () => void;
+  onSubmit?: () => void;
+  disabled?: boolean;
 }) => {
   return (
     <>
       <button
         type={type}
         onClick={onClick}
+        disabled={disabled}
         className={`
             border-2
             border-transparent
