@@ -15,6 +15,8 @@ import {
   FaUser,
 } from "../../shared/react-icons/icons";
 
+import { useFormik } from "formik";
+
 import Button from "../../shared/components/Button";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -25,15 +27,68 @@ import { showAlert } from "../../store/slices/alertSlice";
 import { useAppDispatch } from "../../shared/hooks/hooks";
 import { IAuthState } from "../types/authUser";
 import { supabase } from "../constants/supabaseConfig";
-
+import { validateAuthForm } from "../../shared/utils/formValidation";
 const AuthForm = ({ mode }: IAuthMode) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [formEmail, setFormEmail] = useState("");
-  const [formPassword, setFormPassword] = useState("");
-  const [formName, setFormName] = useState("");
-  const [formLastName, setFormLastName] = useState("");
 
   const dispatch = useAppDispatch();
+
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      lastName: "",
+      password: "",
+      email: "",
+    },
+    onSubmit: async (values) => {
+      if (currentMode === AuthMode.SIGN_UP) {
+        const result = await dispatch(
+          signUpUser({
+            email: values.email,
+            password: values.password,
+            name: values.name,
+            last_name: values.lastName,
+          })
+        );
+
+        if (signUpUser.fulfilled.match(result)) {
+          const {
+            data: { session },
+          } = await supabase.auth.getSession();
+          if (!session) {
+            const signInResult = await dispatch(
+              signInUser({ email: values.email, password: values.password })
+            );
+
+            if (signInUser.rejected.match(signInResult)) {
+              dispatch(
+                showAlert({
+                  message: "Login failed after signup",
+                  severity: "error",
+                })
+              );
+            }
+          }
+        }
+      }
+
+      if (currentMode === AuthMode.LOGIN) {
+        const result = dispatch(
+          signInUser({ email: values.email, password: values.password })
+        );
+        if (signInUser.rejected.match(result)) {
+          console.log("Login rejected:", result.payload);
+          dispatch(
+            showAlert({
+              message: "Login failed: " + result.payload,
+              severity: "error",
+            })
+          );
+        }
+      }
+    },
+    validate: (values) => validateAuthForm(values, currentMode),
+  });
 
   const navigate = useNavigate();
   const { loading, error, email } = useSelector(
@@ -52,44 +107,6 @@ const AuthForm = ({ mode }: IAuthMode) => {
 
   const handleMouseUpPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (currentMode === AuthMode.SIGN_UP) {
-      const result = await dispatch(
-        signUpUser({
-          email: formEmail,
-          password: formPassword,
-          name: formName,
-          last_name: formLastName,
-        })
-      );
-
-      if (signUpUser.fulfilled.match(result)) {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        if (!session) {
-          const signInResult = await dispatch(
-            signInUser({ email: formEmail, password: formPassword })
-          );
-
-          if (signInUser.rejected.match(signInResult)) {
-            dispatch(
-              showAlert({
-                message: "Login failed after signup",
-                severity: "error",
-              })
-            );
-          }
-        }
-      }
-    }
-
-    if (currentMode === AuthMode.LOGIN) {
-      dispatch(signInUser({ email: formEmail, password: formPassword }));
-    }
   };
 
   useEffect(() => {
@@ -119,15 +136,20 @@ const AuthForm = ({ mode }: IAuthMode) => {
     <Box
       component="form"
       className="flex flex-col flex-wrap py-5 px-25 justify-center gap-8 max-sm:px-5"
-      onSubmit={handleSubmit}
+      onSubmit={formik.handleSubmit}
     >
       {/* userName */}
       {currentMode === AuthMode.SIGN_UP && (
         <TextField
-          required
+          name="name"
+          error={formik.touched.name && Boolean(formik.errors.name)}
+          helperText={formik.touched.name && formik.errors.name}
           id="name"
           label="Name"
           type="text"
+          value={formik.values.name}
+          onChange={formik.handleChange}
+          variant="outlined"
           sx={{
             "& label.Mui-focused": { color: "#ffb900" },
             "& .MuiOutlinedInput-root": {
@@ -136,9 +158,6 @@ const AuthForm = ({ mode }: IAuthMode) => {
               "&.Mui-focused fieldset": { borderColor: "#ffb900" },
             },
           }}
-          value={formName}
-          onChange={(e) => setFormName(e.target.value)}
-          variant="outlined"
           slotProps={{
             input: {
               startAdornment: (
@@ -154,10 +173,15 @@ const AuthForm = ({ mode }: IAuthMode) => {
       {/* userLastName */}
       {currentMode === AuthMode.SIGN_UP && (
         <TextField
-          required
           id="last_name"
+          name="lastName"
           label="LastName"
           type="text"
+          error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+          helperText={formik.touched.lastName && formik.errors.lastName}
+          value={formik.values.lastName}
+          onChange={formik.handleChange}
+          variant="outlined"
           sx={{
             "& label.Mui-focused": { color: "#ffb900" },
             "& .MuiOutlinedInput-root": {
@@ -166,9 +190,6 @@ const AuthForm = ({ mode }: IAuthMode) => {
               "&.Mui-focused fieldset": { borderColor: "#ffb900" },
             },
           }}
-          value={formLastName}
-          onChange={(e) => setFormLastName(e.target.value)}
-          variant="outlined"
           slotProps={{
             input: {
               startAdornment: (
@@ -183,10 +204,15 @@ const AuthForm = ({ mode }: IAuthMode) => {
 
       {/* email */}
       <TextField
-        required
         id="email"
         label="Email"
+        name="email"
         type="email"
+        error={formik.touched.email && Boolean(formik.errors.email)}
+        helperText={formik.touched.email && formik.errors.email}
+        value={formik.values.email}
+        onChange={formik.handleChange}
+        variant="outlined"
         sx={{
           "& label.Mui-focused": { color: "#ffb900" },
           "& .MuiOutlinedInput-root": {
@@ -195,9 +221,6 @@ const AuthForm = ({ mode }: IAuthMode) => {
             "&.Mui-focused fieldset": { borderColor: "#ffb900" },
           },
         }}
-        value={formEmail}
-        onChange={(e) => setFormEmail(e.target.value)}
-        variant="outlined"
         slotProps={{
           input: {
             startAdornment: (
@@ -212,12 +235,16 @@ const AuthForm = ({ mode }: IAuthMode) => {
       {/* password */}
       {(currentMode === AuthMode.LOGIN || currentMode === AuthMode.SIGN_UP) && (
         <TextField
-          required
           id="password"
           label="Password"
+          name="password"
+          error={formik.touched.password && Boolean(formik.errors.password)}
+          helperText={formik.touched.password && formik.errors.password}
           type={showPassword ? "text" : "password"}
           variant="outlined"
           autoComplete="on"
+          value={formik.values.password}
+          onChange={formik.handleChange}
           sx={{
             "& label.Mui-focused": { color: "black" },
             "& .MuiOutlinedInput-root": {
@@ -226,8 +253,6 @@ const AuthForm = ({ mode }: IAuthMode) => {
               "&.Mui-focused fieldset": { borderColor: "#ffb900" },
             },
           }}
-          value={formPassword}
-          onChange={(e) => setFormPassword(e.target.value)}
           slotProps={{
             input: {
               startAdornment: (
