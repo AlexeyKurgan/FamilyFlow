@@ -7,3 +7,5 @@ export { HiGlobeAlt } from "react-icons/hi";
 export { RxHamburgerMenu } from "react-icons/rx";
 export { FaRegWindowClose } from "react-icons/fa";
 export { FaUser } from "react-icons/fa";
+export { CiLogin } from "react-icons/ci";
+export { FiUserPlus } from "react-icons/fi";

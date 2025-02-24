@@ -4,6 +4,7 @@ import { links } from "../constants/links";
 import { NavLink } from "react-router-dom";
 import { FaRegWindowClose } from "../../shared/react-icons/icons";
 import Logo from "../../shared/components/Logo";
+import { t } from "i18next";
 
 interface ILandingNavigationProps {
   isMenuOpen: boolean;
@@ -53,7 +54,7 @@ const MobileLandingNavigation = ({
               }
               onClick={closeMenuBurger}
             >
-              {text}
+              {t(text)}
             </NavLink>
           </li>
         ))}

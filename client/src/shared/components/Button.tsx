@@ -27,11 +27,14 @@ const Button = ({
             text-base
             font-semibold
             w-full
-            flex 
-            justify-center 
+            flex
+            flex-wrap 
+            justify-around 
             align-middle
+            items-center
             delay-150
-            p-[9px]
+            py-[9px]
+            px-[10px]
             transition duration-300
             ease-linear
             ${className}`}
