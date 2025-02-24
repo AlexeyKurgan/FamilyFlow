@@ -1,12 +1,25 @@
-import { HiGlobeAlt, RxHamburgerMenu } from "../../shared/react-icons/icons";
+import {
+  RxHamburgerMenu,
+  CiLogin,
+  FiUserPlus,
+} from "../../shared/react-icons/icons";
 import Button from "../../shared/components/Button";
 import LandingNavigation from "./LandingNavigtion";
 import Logo from "../../shared/components/Logo";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LanguageSwitcher from "../../shared/components/language-switcher/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
+import { ILanguage } from "../../store/slices/languageSlice";
+import { useSelector } from "react-redux";
+import clsx from "clsx";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useTranslation();
+  const { language } = useSelector(
+    (state: { language: ILanguage }) => state.language
+  );
   const navigate = useNavigate();
 
   const navigateToLogin = () => {
@@ -47,28 +60,56 @@ const Header = () => {
         isMenuOpen={isMenuOpen}
         closeMenuBurger={handleCloseBurgerMenu}
       />
-      <div className="flex items-center mr-8 cursor-pointer hover:text-amber-400 max-sm:mr-2">
-        <span className="animate-spin slow-spin">
-          <HiGlobeAlt size={20} />
-        </span>
-        <span className="ml-1">EN</span>
+
+      <div
+        className="flex justify-end wrap w-[60%] 
+                      min-w-[40%] gap-2.5 max-[506px]:w-[auto]"
+      >
+        <LanguageSwitcher className={"mr-3 max-[506px]:mr-[0]"} />
+        <Button
+          type="button"
+          className={clsx(
+            "bg-amber-400",
+            "mr-[10px]",
+            "hover:scale-[1.1]",
+            "box-border",
+            "max-sm:max-w-28",
+            "max-[506px]:mr-[0]",
+            "max-[506px]:min-w-[105px]",
+            {
+              "max-w-[120px]": language === "en",
+              "max-w-[100px]": language === "ua",
+            }
+          )}
+          onClick={navigateToLogin}
+        >
+          <CiLogin size={22} />
+          <span>{t("Login")}</span>
+        </Button>
+
+        <Button
+          type="button"
+          className={clsx(
+            "bg-black",
+            "text-white",
+            "hover:scale-[1.1]",
+            "box-border",
+            "max-sm:max-w-28 ",
+            "max-[506px]:mr-[0]",
+            "max-[506px]:min-w-[105px]",
+            {
+              "max-w-[120px]": language === "en",
+              "max-w-[180px]": language === "ua",
+            }
+          )}
+          onClick={navigateToSignUp}
+        >
+          <FiUserPlus size={22} className="mr-2" />
+          <span className="max-w-[180px] overflow-hidden text-ellipsis whitespace-nowrap">
+            {t("SignUp")}
+          </span>
+        </Button>
       </div>
-
-      <Button
-        type="button"
-        className="bg-amber-400 mr-[25px] hover:scale-[1.1] box-border max-w-[125px] max-sm:max-w-28"
-        onClick={navigateToLogin}
-      >
-        Login
-      </Button>
-
-      <Button
-        type="button"
-        className="bg-black text-white max-w-[125px] box-border border-amber-400 hover:scale-[1.1] max-sm:max-w-28"
-        onClick={navigateToSignUp}
-      >
-        Sign up
-      </Button>
     </header>
   );
 };

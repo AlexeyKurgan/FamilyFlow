@@ -7,6 +7,7 @@ import clsx from "clsx";
 //Components
 import { NavLink } from "react-router-dom";
 import MobileLandingNavigation from "./MobileLandingNavigation";
+import { t } from "i18next";
 
 interface ILandingNavigationProps {
   isMenuOpen: boolean;
@@ -31,7 +32,7 @@ const LandingNavigation = ({
               )
             }
           >
-            {text}
+            {t(text)}
           </NavLink>
         ))}
       </nav>
