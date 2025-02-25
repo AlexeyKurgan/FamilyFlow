@@ -3,8 +3,11 @@ import CustomTooltip from "../../shared/components/tooltip/Tooltip";
 import AuthForm from "../components/AuthForm";
 import { GoArrowRight } from "../../shared/react-icons/icons";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const ForgotPasswordPage = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="flex w-full h-full box-content max-lg:flex-col">
       <div
@@ -15,7 +18,7 @@ const ForgotPasswordPage = () => {
       >
         <CustomTooltip
           placement="bottom"
-          title="Back Home"
+          title={t("TooltipBackHome")}
           className="top-5 left-5 rotate-180"
           component={Link}
           pathUrl={"/"}

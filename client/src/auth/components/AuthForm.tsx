@@ -16,7 +16,6 @@ import {
 } from "../../shared/react-icons/icons";
 
 import { useFormik } from "formik";
-
 import Button from "../../shared/components/Button";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -28,10 +27,17 @@ import { useAppDispatch } from "../../shared/hooks/hooks";
 import { IAuthState } from "../types/authUser";
 import { supabase } from "../constants/supabaseConfig";
 import { validateAuthForm } from "../../shared/utils/formValidation";
+import { useTranslation } from "react-i18next";
 const AuthForm = ({ mode }: IAuthMode) => {
   const [showPassword, setShowPassword] = useState(false);
-
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
+  const location = useLocation();
+  const currentMode = mode || (location.pathname.replace("/", "") as AuthMode);
+  const navigate = useNavigate();
+  const { loading, error, email } = useSelector(
+    (state: { auth: IAuthState }) => state.auth
+  );
 
   const formik = useFormik({
     initialValues: {
@@ -87,16 +93,8 @@ const AuthForm = ({ mode }: IAuthMode) => {
         }
       }
     },
-    validate: (values) => validateAuthForm(values, currentMode),
+    validate: (values) => validateAuthForm(values, currentMode, t),
   });
-
-  const navigate = useNavigate();
-  const { loading, error, email } = useSelector(
-    (state: { auth: IAuthState }) => state.auth
-  );
-
-  const location = useLocation();
-  const currentMode = mode || (location.pathname.replace("/", "") as AuthMode);
 
   const handleClickVisiblePassword = () => {
     setShowPassword((prev) => !prev);
@@ -145,7 +143,7 @@ const AuthForm = ({ mode }: IAuthMode) => {
           error={formik.touched.name && Boolean(formik.errors.name)}
           helperText={formik.touched.name && formik.errors.name}
           id="name"
-          label="Name"
+          label={t("LabelInputName")}
           type="text"
           value={formik.values.name}
           onChange={formik.handleChange}
@@ -175,7 +173,7 @@ const AuthForm = ({ mode }: IAuthMode) => {
         <TextField
           id="last_name"
           name="lastName"
-          label="LastName"
+          label={t("LabelInputLastName")}
           type="text"
           error={formik.touched.lastName && Boolean(formik.errors.lastName)}
           helperText={formik.touched.lastName && formik.errors.lastName}
@@ -205,7 +203,7 @@ const AuthForm = ({ mode }: IAuthMode) => {
       {/* email */}
       <TextField
         id="email"
-        label="Email"
+        label={t("LabelInputEmail")}
         name="email"
         type="email"
         error={formik.touched.email && Boolean(formik.errors.email)}
@@ -236,7 +234,7 @@ const AuthForm = ({ mode }: IAuthMode) => {
       {(currentMode === AuthMode.LOGIN || currentMode === AuthMode.SIGN_UP) && (
         <TextField
           id="password"
-          label="Password"
+          label={t("LabelInputPassword")}
           name="password"
           error={formik.touched.password && Boolean(formik.errors.password)}
           helperText={formik.touched.password && formik.errors.password}
@@ -296,23 +294,32 @@ const AuthForm = ({ mode }: IAuthMode) => {
 
       {currentMode === AuthMode.LOGIN && (
         <>
-          <Button className="bg-amber-400 w-56 hover:scale-[1.1]" type="submit">
-            Login
+          <Button
+            className="justify-center bg-amber-400 w-56 hover:scale-[1.1]"
+            type="submit"
+          >
+            {t("Login")}
           </Button>
 
-          <span className="text-center text-amber-400 font-semibold">
+          {/* <span className="text-center text-amber-400 font-semibold">
             Forgot Password
-          </span>
+          </span> */}
         </>
       )}
       {currentMode === AuthMode.SIGN_UP && (
-        <Button className="bg-amber-400 w-56 hover:scale-[1.1]" type="submit">
-          Sign Up
+        <Button
+          className="justify-center bg-amber-400 w-56 hover:scale-[1.1]"
+          type="submit"
+        >
+          {t("SignUp")}
         </Button>
       )}
       {currentMode === AuthMode.FORGOT_PASSWORD && (
-        <Button className="bg-amber-400 w-56 hover:scale-[1.1]" type="submit">
-          Reset Password
+        <Button
+          className="justify-center bg-amber-400 w-56 hover:scale-[1.1]"
+          type="submit"
+        >
+          {t("ResetPassword")}
         </Button>
       )}
     </Box>

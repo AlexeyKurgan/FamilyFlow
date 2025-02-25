@@ -3,8 +3,11 @@ import CustomTooltip from "../../shared/components/tooltip/Tooltip";
 import AuthForm from "../components/AuthForm";
 import { AuthMode } from "../constants/authMode";
 import { GoArrowRight } from "../../shared/react-icons/icons";
+import { useTranslation } from "react-i18next";
 
 const SignUpPage = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="flex w-full h-full box-content max-lg:flex-col">
       <div
@@ -15,7 +18,7 @@ const SignUpPage = () => {
       >
         <CustomTooltip
           placement="bottom"
-          title="Back Home"
+          title={t("TooltipBackHome")}
           className="top-5 left-5 rotate-180"
           component={Link}
           pathUrl={"/"}
@@ -24,7 +27,7 @@ const SignUpPage = () => {
         </CustomTooltip>
         <h1 className="text-5xl font-medium mb-6">FamilyFlow</h1>
         <p className="text-xl font-bold max-md:text-base">
-          A task manager designed for families and productive for parents.
+          {t("AuthTextLoginDesc")}
         </p>
 
         <div className="absolute top-[-90px] right-[-140px] -z-10 w-[250px] h-[250px] bg-black rounded-full"></div>
@@ -32,9 +35,11 @@ const SignUpPage = () => {
       </div>
       <div className="w-[50%] p-5 flex flex-col justify-center  max-lg:w-[100%] max-md:pt-[2rem]">
         <span className="text-center block text-4xl font-bold mb-2.5">
-          Hello!
+          {t("AuthTextSignUPGreetingTitle")}
         </span>
-        <p className="text-center font-bold">Sign Up to Get Started</p>
+        <p className="text-center font-bold">
+          {t("AuthTextSignUPGreetingDesc")}
+        </p>
         <AuthForm mode={AuthMode.SIGN_UP} />
       </div>
     </div>

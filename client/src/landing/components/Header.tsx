@@ -77,8 +77,8 @@ const Header = () => {
             "max-[506px]:mr-[0]",
             "max-[506px]:min-w-[105px]",
             {
-              "max-w-[120px]": language === "en",
-              "max-w-[100px]": language === "ua",
+              "max-w-[100px]": language === "en",
+              "max-w-[105px]": language === "ua",
             }
           )}
           onClick={navigateToLogin}

@@ -1,4 +1,8 @@
+import { useTranslation } from "react-i18next";
+
 const AboutUs = () => {
+  const { t } = useTranslation();
+
   return (
     <>
       <h1 className="invisible">About Us</h1>
@@ -6,48 +10,34 @@ const AboutUs = () => {
       {/* <!-- Mission Section --> */}
       <section className="max-w-4xl mx-auto py-10 px-6">
         <h2 className="text-4xl font-semibold text-black  text-center mb-4">
-          Our Mission
+          {t("OurMissionTitle")}
         </h2>
-        <p className="text-xl leading-relaxed">
-          At FamilyFlow, we aim to simplify family life by providing a task
-          manager designed for parents and children alike. Our mission is to
-          foster teamwork, responsibility, and connection through easy-to-use
-          collaborative tools.
-        </p>
+        <p className="text-xl leading-relaxed">{t("OurMissionDesc1")}</p>
       </section>
 
       {/* <!-- Features --> */}
       <section className="max-w-5xl mx-auto py-10 px-6">
         <h2 className="text-4xl font-semibold text-black mb-6 text-center">
-          Why Choose FamilyFlow?
+          {t("WhyChooseFamilyFLow")}
         </h2>
         <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <li className="bg-amber-400 p-6 rounded-xl shadow-lg hover:shadow-xl transition">
             <h3 className="text-xl font-bold text-black mb-2">
-              Task Management
+              {t("WhyChooseFamilyFLowTitle1")}
             </h3>
-            <p>
-              Easily assign and track household tasks to involve the whole
-              family in daily activities.
-            </p>
+            <p>{t("WhyChooseFamilyFLowDesc1")}</p>
           </li>
           <li className="bg-amber-400 p-6 rounded-xl shadow-lg hover:shadow-xl transition">
             <h3 className="text-xl font-bold text-black mb-2">
-              Collaborative Planning
+              {t("WhyChooseFamilyFLowTitle2")}
             </h3>
-            <p>
-              Plan events, chores, and family activities together with intuitive
-              planning features.
-            </p>
+            <p>{t("WhyChooseFamilyFLowDesc2")}</p>
           </li>
           <li className="bg-amber-400 p-6 rounded-xl shadow-lg hover:shadow-xl transition">
             <h3 className="text-xl font-bold text-black mb-2">
-              Engaging Challenges
+              {t("WhyChooseFamilyFLowTitle3")}
             </h3>
-            <p>
-              Make task completion fun with challenges and rewards that motivate
-              kids and adults alike.
-            </p>
+            <p>{t("WhyChooseFamilyFLowDesc3")}</p>
           </li>
         </ul>
       </section>
