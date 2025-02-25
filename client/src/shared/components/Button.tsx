@@ -29,7 +29,7 @@ const Button = ({
             w-full
             flex
             flex-wrap 
-            justify-around 
+            justify-between 
             align-middle
             items-center
             delay-150
