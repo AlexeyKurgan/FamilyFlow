@@ -1,6 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Button from "../components/Button";
+import { useEffect } from "react";
 const NotFoundPage = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log(location);
+  }, [location]);
+
   return (
     <section className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
       <div className="text-center">
@@ -13,7 +20,7 @@ const NotFoundPage = () => {
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <Link to={"/"}>
-            <Button className="bg-amber-400 hover:scale-[1.1]">
+            <Button type="button" className="bg-amber-400 hover:scale-[1.1]">
               Go back home
             </Button>
           </Link>

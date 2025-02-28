@@ -1,0 +1,20 @@
+.appLayout {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  flex-direction: column;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  overflow: hidden;
+}
+
+.mainContent {
+  display: flex;
+  flex: 1;
+}
+
+.mainAppWrapper {
+  height: calc(100vh - 78px);
+  overflow-y: auto;
+}

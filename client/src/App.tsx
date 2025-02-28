@@ -8,6 +8,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
 import AlertMUI from "./shared/components/alerts/Alert";
 import PrivateRoute from "./shared/components/PrivateRoute";
+import TasksPage from "./app/pages/tasks/TasksPage";
+import ResourcesPage from "./app/pages/resources/ResourcesPage";
+import IntegrationsPage from "./app/pages/integrations/IntegrationsPage";
+import SettingsPage from "./app/pages/settings/SettingsPage";
+import AchievementPage from "./app/pages/achievement/AchievementPage";
+import RewardsShopPage from "./app/pages/pointstAssignments/RewardsShopPage";
 
 // Lazy loading
 // Landing Pages
@@ -21,7 +27,7 @@ const ForgotPassword = lazy(() => import("./auth/pages/ForgotPasswordPage"));
 
 // Application pages
 const DashboardPage = lazy(() => import("./app/pages/dashboard/Dashboard"));
-const ProfilePage = lazy(() => import("./app/pages/profile/Profile"));
+const ProfilePage = lazy(() => import("./app/pages/profile/ProfilePage"));
 
 //Layouts
 const LandingLayout = lazy(() => import("./landing/LandingLayout"));
@@ -59,6 +65,12 @@ function App() {
         >
           <Route index element={<DashboardPage />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="tasks" element={<TasksPage />} />
+          <Route path="resources" element={<ResourcesPage />} />
+          <Route path="integrations" element={<IntegrationsPage />} />
+          <Route path="rewards_shop" element={<RewardsShopPage />} />
+          <Route path="achievement" element={<AchievementPage />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />

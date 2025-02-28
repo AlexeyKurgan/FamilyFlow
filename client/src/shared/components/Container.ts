@@ -10,4 +10,5 @@ export const Container = styled.div`
 export const Main = styled.main`
     padding: 10px 15px;
     min-height: calc(100vh - 45vh);
+    flex-grow: 1;
 `

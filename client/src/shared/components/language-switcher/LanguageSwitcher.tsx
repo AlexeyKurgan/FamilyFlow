@@ -20,7 +20,7 @@ const LanguageSwitcher = ({ className }: { className: string }) => {
   return (
     <>
       <div
-        className={`flex items-center relative cursor-pointer hover:text-amber-400 ${className}`}
+        className={`flex items-center relative cursor-pointer  hover:text-amber-400 ${className}`}
         onClick={() =>
           dispatch(changeLanguage(language === "en" ? "ua" : "en"))
         }
