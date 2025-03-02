@@ -28,6 +28,7 @@ import { IAuthState } from "../types/authUser";
 import { supabase } from "../constants/supabaseConfig";
 import { validateAuthForm } from "../../shared/utils/formValidation";
 import { useTranslation } from "react-i18next";
+
 const AuthForm = ({ mode }: IAuthMode) => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useAppDispatch();
@@ -83,7 +84,6 @@ const AuthForm = ({ mode }: IAuthMode) => {
           signInUser({ email: values.email, password: values.password })
         );
         if (signInUser.rejected.match(result)) {
-          console.log("Login rejected:", result.payload);
           dispatch(
             showAlert({
               message: "Login failed: " + result.payload,

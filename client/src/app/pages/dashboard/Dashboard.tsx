@@ -8,7 +8,6 @@ import achievement5 from "../../../assets/images/achievements/trophy.png";
 
 import {
   MdCalendarToday,
-  MdPerson,
   MdTaskAlt,
   MdLink,
   MdBook,
@@ -16,31 +15,72 @@ import {
   MdCelebration,
   MdChat,
   MdNote,
+  MdWavingHand,
 } from "react-icons/md";
+import { PieChart } from "@mui/x-charts/PieChart";
+import { useEffect, useState } from "react";
+import Date from "../../../shared/components/date/Date";
+import Card from "../../../shared/components/card/Card";
+import { useSelector } from "react-redux";
+import { IAuthState } from "../../../auth/types/authUser";
+import { useAppDispatch } from "../../../shared/hooks/hooks";
+import { fetchUserById } from "../../../store/slices/tasksSlice";
+import { showAlert } from "../../../store/slices/alertSlice";
+import { RootState } from "../../../store/store";
+import { ClipLoader } from "react-spinners";
 
 export const Dashboard = () => {
   const userName = "John Doe";
+  const [pieChartData, setPieChartData] = useState([
+    { id: 0, value: 5, label: "Completed" },
+    { id: 1, value: 3, label: "In Progress" },
+    { id: 2, value: 8, label: "Total" },
+  ]);
+
+  const { session } = useSelector((state: { auth: IAuthState }) => state.auth);
+  const { tasks, error, loading } = useSelector(
+    (state: RootState) => state.tasks
+  );
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (session?.user.id) {
+      dispatch(fetchUserById({ user_uuid: session.user.id }));
+    }
+  }, [pieChartData, dispatch, session]);
+
+  useEffect(() => {
+    if (error) {
+      dispatch(
+        showAlert({
+          message: error,
+          severity: "error",
+        })
+      );
+    }
+  }, [error, dispatch]);
 
   return (
     <div className={`app-content ${styles.dashboardContent}`}>
-      <section className={`${styles.row} ${styles.dateRow}`}>
-        <article className={styles.card}>
-          <div className={`flex items-center ${styles.cardIcon}`}>
-            <MdCalendarToday size={48} color="#4a90e2" className="mr-5" />
-            <h2>Friday</h2>
-          </div>
-
-          <p>Mon Mar 3, 2025 | 10:00 AM</p>
-        </article>
+      <section className={`${styles.row}`}>
+        <Date classNames={`dateCard`} />
       </section>
-      <section className={`${styles.row} ${styles.activityRow}`}>
-        <article className={styles.card}>
-          <div className={`flex items-center ${styles.cardIcon}`}>
-            <MdPerson size={48} color="#7f8c8d" className="mr-5" />
+      <section className={`${styles.row}`}>
+        <Card className={`${styles.activityCard}`}>
+          <div className={`flex items-start ${styles.cardIcon}`}>
+            <MdWavingHand size={32} color="#000000" className="mr-5" />
             <h2>Welcome, {userName}!</h2>
           </div>
           <div className={styles.chartPlaceholder}>
-            Activity Graph (Add Chart Here)
+            <PieChart
+              series={[
+                {
+                  data: pieChartData,
+                },
+              ]}
+              width={400}
+              height={200}
+            />
           </div>
           <div className={styles.activityStats}>
             <p>Completed Tasks: 5</p>
@@ -68,27 +108,37 @@ export const Dashboard = () => {
               <Link to="/dashboard/achievement">View All</Link>
             </ul>
           </div>
-        </article>
+        </Card>
       </section>
-      <section className={`${styles.row} ${styles.tasksRow}`}>
-        <article className={styles.card}>
+      <section className={`${styles.row}`}>
+        <Card className={`${styles.tasksRow}`}>
           <div className={`flex items-center ${styles.cardIcon}`}>
             <MdTaskAlt size={48} color="#ff6f61" className="mr-5" />
             <h2>Tasks</h2>
           </div>
 
-          <ul>
-            <li>Buy groceries</li>
-            <li>Complete project</li>
-            <li>Call mom</li>
-          </ul>
+          {loading ? (
+            <div className="relative w-full h-full">
+              <ClipLoader
+                className="absolute right-[39%] top-1/2 transform translate-x-[-50%] translate-y-[-50%]"
+                color="#FABB18"
+                size={50}
+              />
+            </div>
+          ) : (
+            <ul>
+              {tasks?.map((task) =>
+                loading ? <ClipLoader /> : <li key={task.id}>{task.title}</li>
+              )}
+            </ul>
+          )}
           <Link to="/dashboard/tasks" className={styles.navButton}>
             Go to Tasks
           </Link>
-        </article>
+        </Card>
       </section>
-      <section className={`${styles.row} ${styles.integrationsRow}`}>
-        <article className={styles.card}>
+      <section className={`${styles.row}`}>
+        <Card className={`${styles.integrationsCard}`}>
           <div className={`flex items-center ${styles.cardIcon}`}>
             <MdLink size={48} color="#9b59b6" className="mr-5" />
             <h2>Integrations</h2>
@@ -118,10 +168,10 @@ export const Dashboard = () => {
           <Link to="/dashboard/integrations" className={styles.navButton}>
             Go to Integrations
           </Link>
-        </article>
+        </Card>
       </section>
-      <section className={`${styles.row} ${styles.resourcesRow}`}>
-        <article className={styles.card}>
+      <section className={`${styles.row}`}>
+        <Card>
           <div className={`flex items-center ${styles.cardIcon}`}>
             <MdBook size={48} color="#2ecc71" className="mr-5" />
             <h2>Resources</h2>
@@ -142,10 +192,10 @@ export const Dashboard = () => {
           <Link to="/dashboard/resources" className={styles.navButton}>
             Go to Resources
           </Link>
-        </article>
+        </Card>
       </section>
-      <section className={`${styles.row} ${styles.rewardsRow}`}>
-        <article className={styles.card}>
+      <section className={`${styles.row}`}>
+        <Card>
           <div className={`flex items-center ${styles.cardIcon}`}>
             <MdStorefront size={48} color="#f4c430" className="mr-5" />
             <h2>Rewards Shop</h2>
@@ -155,10 +205,10 @@ export const Dashboard = () => {
           <Link to="/dashboard/rewards" className={styles.navButton}>
             Visit Shop
           </Link>
-        </article>
+        </Card>
       </section>
-      <section className={`${styles.row} ${styles.achievementsRow}`}>
-        <article className={styles.card}>
+      <section className={`${styles.row}`}>
+        <Card>
           <div className={`flex items-center ${styles.cardIcon}`}>
             <MdCelebration size={48} color="#e74c3c" className="mr-5" />
             <h2>Achievements</h2>
@@ -172,7 +222,7 @@ export const Dashboard = () => {
           <Link to="/dashboard/achievements" className={styles.navButton}>
             View Achievements
           </Link>
-        </article>
+        </Card>
       </section>
     </div>
   );

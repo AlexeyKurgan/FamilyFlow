@@ -2,7 +2,7 @@ import Integrations from "../../components/integrations/Integrations";
 
 const IntegrationsPage = () => {
   return (
-    <div className="intergations-wrapper">
+    <div className="integrations-wrapper">
       <Integrations />
     </div>
   );

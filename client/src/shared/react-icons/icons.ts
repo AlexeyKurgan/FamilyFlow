@@ -20,3 +20,4 @@ export { GrResources } from "react-icons/gr";
 export { IoMdSettings } from "react-icons/io";
 export { IoStorefront } from "react-icons/io5";
 export { GrAchievement } from "react-icons/gr";
+export { MdWavingHand } from "react-icons/md";

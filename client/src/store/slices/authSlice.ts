@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IAuthSignUp, IAuthState, ISignIn, SignInResponse } from "../../auth/types/authUser"
 import { signInRequest, signUpRequest, UserData } from "../../auth/api/authRequests"
+import { Session } from "@supabase/supabase-js";
 
 
 const initialState: IAuthState = {
@@ -10,7 +11,7 @@ const initialState: IAuthState = {
     password: '',
     loading: false,
     error: null,
-    session: null
+    session: null as Session | null
 }
 
 export const signUpUser = createAsyncThunk<UserData | null, IAuthSignUp>('auth/sign_up', async ({ email, password, name, last_name }: IAuthSignUp, { rejectWithValue }) => {
@@ -47,7 +48,14 @@ export const signInUser = createAsyncThunk<
 const authSlice = createSlice({
     name: 'user',
     initialState,
-    reducers: {},
+    reducers: {
+        setSession(state, action: PayloadAction<Session | null>) {
+            state.session = action.payload;
+            if (action.payload?.user) {
+                state.email = action.payload.user.email || "";
+            }
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(signUpUser.pending, (state) => {
@@ -58,7 +66,6 @@ const authSlice = createSlice({
                 }
             })
             .addCase(signUpUser.fulfilled, (state, action) => {
-                // console.log("Fulfilled payload:", action.payload);
                 if (action.payload) {
                     return {
                         ...state,
@@ -106,4 +113,5 @@ const authSlice = createSlice({
     }
 })
 
+export const { setSession } = authSlice.actions;
 export default authSlice.reducer;

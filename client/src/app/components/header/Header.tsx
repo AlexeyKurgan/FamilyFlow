@@ -1,10 +1,11 @@
-import React, { ChangeEvent, useState } from "react";
+// import React, { ChangeEvent, useState } from "react";
+import React, { useState } from "react";
 import {
   Avatar,
-  InputAdornment,
+  // InputAdornment,
   Menu,
   MenuItem,
-  TextField,
+  // TextField,
   Typography,
 } from "@mui/material";
 import styles from "./Header.module.scss";
@@ -14,7 +15,7 @@ import { HiMoon, HiSun } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { t } from "i18next";
 import Button from "../../../shared/components/Button";
-import { FaSearch } from "../../../shared/react-icons/icons";
+// import { FaSearch } from "../../../shared/react-icons/icons";
 
 interface HeaderProps {
   onAvatarClick: (event: React.MouseEvent<HTMLElement>) => void;
@@ -24,7 +25,7 @@ interface HeaderProps {
 
 const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
   const [darkMode, setDarkMode] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
+  // const [searchValue, setSearchValue] = useState("");
 
   const toggleTheme = () => {
     setDarkMode(!darkMode);
@@ -35,11 +36,11 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
     console.log("logout");
   }
 
-  function handleSearchChange(
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void {
-    setSearchValue(event.target.value);
-  }
+  // function handleSearchChange(
+  //   event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  // ): void {
+  //   setSearchValue(event.target.value);
+  // }
 
   return (
     <header className={styles.header}>
@@ -47,7 +48,7 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
         <Logo classNames={styles.logo} />
       </div>
       <div className={styles.headerRight}>
-        <TextField
+        {/* <TextField
           name="search"
           id="search"
           label={t("SearchLabelInput")}
@@ -72,7 +73,7 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
               ),
             },
           }}
-        />
+        /> */}
         <LanguageSwitcher className={styles.languageSwitcher} />
         <Button
           type="button"
