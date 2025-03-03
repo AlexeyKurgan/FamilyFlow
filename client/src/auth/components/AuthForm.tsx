@@ -83,6 +83,7 @@ const AuthForm = ({ mode }: IAuthMode) => {
         const result = dispatch(
           signInUser({ email: values.email, password: values.password })
         );
+
         if (signInUser.rejected.match(result)) {
           dispatch(
             showAlert({

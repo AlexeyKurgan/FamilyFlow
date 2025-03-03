@@ -12,9 +12,12 @@ import styles from "./Header.module.scss";
 import Logo from "../../../shared/components/Logo";
 import LanguageSwitcher from "../../../shared/components/language-switcher/LanguageSwitcher";
 import { HiMoon, HiSun } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { t } from "i18next";
 import Button from "../../../shared/components/Button";
+import { useAppDispatch } from "../../../shared/hooks/hooks";
+import { signOutUser } from "../../../store/slices/authSlice";
+import { showAlert } from "../../../store/slices/alertSlice";
 // import { FaSearch } from "../../../shared/react-icons/icons";
 
 interface HeaderProps {
@@ -25,6 +28,8 @@ interface HeaderProps {
 
 const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
   const [darkMode, setDarkMode] = useState(false);
+  const dispatch = useAppDispatch();
+  const navigation = useNavigate();
   // const [searchValue, setSearchValue] = useState("");
 
   const toggleTheme = () => {
@@ -32,15 +37,19 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
     document.body.classList.toggle("dark-mode", !darkMode);
   };
 
-  function handleLogout(): void {
-    console.log("logout");
-  }
-
-  // function handleSearchChange(
-  //   event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  // ): void {
-  //   setSearchValue(event.target.value);
-  // }
+  const handleLogout = async () => {
+    try {
+      await dispatch(signOutUser());
+      dispatch(
+        showAlert({ message: `Signed out successfully`, severity: "success" })
+      );
+      navigation("/");
+    } catch (error) {
+      dispatch(
+        showAlert({ message: `Sign out failed: ${error}`, severity: "error" })
+      );
+    }
+  };
 
   return (
     <header className={styles.header}>

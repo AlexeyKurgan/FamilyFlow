@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IAuthSignUp, IAuthState, ISignIn, SignInResponse } from "../../auth/types/authUser"
-import { signInRequest, signUpRequest, UserData } from "../../auth/api/authRequests"
+import { signInRequest, signOutRequest, signUpRequest, UserData } from "../../auth/api/authRequests"
 import { Session } from "@supabase/supabase-js";
 
 
@@ -42,6 +42,22 @@ export const signInUser = createAsyncThunk<
             return rejectWithValue(error.message);
         }
         return rejectWithValue("Occurred due to a sign-in error");
+    }
+})
+
+export const signOutUser = createAsyncThunk<{ error: null; }, void>("auth/sign_out", async (_, { rejectWithValue }) => {
+    try {
+        const { error } = await signOutRequest();
+
+        if (error) {
+            throw new Error(error);
+        }
+        return { error: null }
+    } catch (error) {
+        if (error instanceof Error) {
+            return rejectWithValue(error.message);
+        }
+        return rejectWithValue("Occurred due to a sign-out error");
     }
 })
 
@@ -93,9 +109,6 @@ const authSlice = createSlice({
                 }
             })
             .addCase(signInUser.fulfilled, (state, action) => {
-                console.log('signInUser slice state: ', state);
-                console.log('signInUser slice action: ', action.payload);
-
                 return {
                     ...state,
                     session: action.payload.session,
@@ -104,6 +117,19 @@ const authSlice = createSlice({
                 }
             })
             .addCase(signInUser.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.payload as string
+                }
+            })
+            .addCase(signOutUser.pending, (state) => {
+                return { ...state, loading: true, error: null };
+            })
+            .addCase(signOutUser.fulfilled, (state) => {
+                return { ...state, session: null, loading: false, email: "", error: null };
+            })
+            .addCase(signOutUser.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

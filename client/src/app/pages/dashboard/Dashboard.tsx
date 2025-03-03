@@ -18,7 +18,7 @@ import {
   MdWavingHand,
 } from "react-icons/md";
 import { PieChart } from "@mui/x-charts/PieChart";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Date from "../../../shared/components/date/Date";
 import Card from "../../../shared/components/card/Card";
 import { useSelector } from "react-redux";
@@ -28,26 +28,47 @@ import { fetchUserById } from "../../../store/slices/tasksSlice";
 import { showAlert } from "../../../store/slices/alertSlice";
 import { RootState } from "../../../store/store";
 import { ClipLoader } from "react-spinners";
+import ActivityTasksStatistic from "../../components/activityTasksStatistic/ActivityTasksStatistic";
 
 export const Dashboard = () => {
   const userName = "John Doe";
-  const [pieChartData, setPieChartData] = useState([
-    { id: 0, value: 5, label: "Completed" },
-    { id: 1, value: 3, label: "In Progress" },
-    { id: 2, value: 8, label: "Total" },
-  ]);
-
   const { session } = useSelector((state: { auth: IAuthState }) => state.auth);
   const { tasks, error, loading } = useSelector(
     (state: RootState) => state.tasks
   );
+  const [pieChartData, setPieChartData] = useState([
+    { id: 0, value: 0, label: "Completed" },
+    { id: 1, value: 0, label: "In Progress" },
+    { id: 2, value: 0, label: "Pending" },
+    { id: 3, value: 0, label: "Total" },
+  ]);
+
+  const handleDataUpdate = useCallback(
+    (data: {
+      completed: number;
+      inProgress: number;
+      pending: number;
+      total: number;
+    }) => {
+      const { completed, inProgress, pending, total } = data;
+
+      setPieChartData([
+        { id: 0, value: completed, label: "Completed" },
+        { id: 1, value: inProgress, label: "In Progress" },
+        { id: 2, value: pending, label: "Pending" },
+        { id: 3, value: total, label: "Total" },
+      ]);
+    },
+    []
+  );
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (session?.user.id) {
       dispatch(fetchUserById({ user_uuid: session.user.id }));
     }
-  }, [pieChartData, dispatch, session]);
+  }, [dispatch, session]);
 
   useEffect(() => {
     if (error) {
@@ -73,20 +94,15 @@ export const Dashboard = () => {
           </div>
           <div className={styles.chartPlaceholder}>
             <PieChart
-              series={[
-                {
-                  data: pieChartData,
-                },
-              ]}
+              series={[{ data: pieChartData }]}
+              tooltip={{ trigger: "none" }}
               width={400}
               height={200}
             />
           </div>
-          <div className={styles.activityStats}>
-            <p>Completed Tasks: 5</p>
-            <p>In Progress: 3</p>
-            <p>Total Tasks: 8</p>
-          </div>
+
+          <ActivityTasksStatistic onDataUpdate={handleDataUpdate} />
+
           <div className={styles.achievementsList}>
             <h3>Recent Achievements</h3>
             <ul className={styles.achievementsGrid}>
