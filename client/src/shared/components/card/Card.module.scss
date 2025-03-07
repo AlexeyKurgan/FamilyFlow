@@ -18,7 +18,7 @@ $shadow-color: rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: white;
+    background-color: $card-bg;
 
     &:hover {
         transform: translateY(-2px);
@@ -74,9 +74,26 @@ $shadow-color: rgba(0, 0, 0, 0.1);
             color: $text-color;
             font-size: 1rem;
             line-height: 1.5;
+            font-weight: 600;
+            border-bottom: 1px solid #f0f4f8;
             padding: 8px 0;
             position: relative;
             padding-left: 16px;
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+
+
+            a {
+                font-weight: 600;
+            }
+
+            &:hover {
+                transform: translateX(4px);
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
 
             &:before {
                 content: "•";

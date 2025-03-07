@@ -7,28 +7,40 @@ import achievement4 from "../../../assets/images/achievements/target.png";
 import achievement5 from "../../../assets/images/achievements/trophy.png";
 
 import {
-  MdCalendarToday,
+  // MdCalendarToday,
   MdTaskAlt,
   MdLink,
   MdBook,
   MdStorefront,
-  MdCelebration,
-  MdChat,
-  MdNote,
+  // MdCelebration,
+  // MdChat,
+  // MdNote,
   MdWavingHand,
 } from "react-icons/md";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { useCallback, useEffect, useState } from "react";
+// import { useCallback, useEffect, useMemo, useState } from "react";
 import Date from "../../../shared/components/date/Date";
 import Card from "../../../shared/components/card/Card";
 import { useSelector } from "react-redux";
 import { IAuthState } from "../../../auth/types/authUser";
 import { useAppDispatch } from "../../../shared/hooks/hooks";
-import { fetchUserById } from "../../../store/slices/tasksSlice";
+import { fetchTasksUserById } from "../../../store/slices/tasksSlice";
 import { showAlert } from "../../../store/slices/alertSlice";
 import { RootState } from "../../../store/store";
 import { ClipLoader } from "react-spinners";
 import ActivityTasksStatistic from "../../components/activityTasksStatistic/ActivityTasksStatistic";
+import {
+  useDisplayedSliceData,
+  SLICE_END,
+} from "../../hooks/displayedSliceData";
+import { fetchIntegrationsUserById } from "../../../store/slices/integrationsSlice";
+import {
+  FaExclamationTriangle,
+  FiCheckSquare,
+} from "../../../shared/react-icons/icons";
+import CustomTooltip from "../../../shared/components/tooltip/Tooltip";
+import IntegrationIcon from "../../../shared/components/IntegrationIcon";
 
 export const Dashboard = () => {
   const userName = "John Doe";
@@ -36,6 +48,12 @@ export const Dashboard = () => {
   const { tasks, error, loading } = useSelector(
     (state: RootState) => state.tasks
   );
+  const { integrations } = useSelector(
+    (state: RootState) => state.integrations
+  );
+  const displayedTasks = useDisplayedSliceData(tasks);
+  const displayedIntegrations = useDisplayedSliceData(integrations);
+
   const [pieChartData, setPieChartData] = useState([
     { id: 0, value: 0, label: "Completed" },
     { id: 1, value: 0, label: "In Progress" },
@@ -66,7 +84,8 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (session?.user.id) {
-      dispatch(fetchUserById({ user_uuid: session.user.id }));
+      dispatch(fetchTasksUserById({ user_uuid: session.user.id }));
+      dispatch(fetchIntegrationsUserById({ user_uuid: session.user.id }));
     }
   }, [dispatch, session]);
 
@@ -143,8 +162,16 @@ export const Dashboard = () => {
             </div>
           ) : (
             <ul>
-              {tasks?.map((task) =>
-                loading ? <ClipLoader /> : <li key={task.id}>{task.title}</li>
+              {displayedTasks.map((task) => (
+                <li key={task.id}>{task.title}</li>
+              ))}
+              {Array.isArray(tasks) && tasks.length === 0 && (
+                <span className="text-2xl font-bold">You have not tasks!</span>
+              )}
+              {tasks && tasks.length > SLICE_END && (
+                <li>
+                  <Link to="/dashboard/tasks">View All</Link>
+                </li>
               )}
             </ul>
           )}
@@ -160,27 +187,71 @@ export const Dashboard = () => {
             <h2>Integrations</h2>
           </div>
 
-          <p>Connected services:</p>
-          <ul className={styles.integrationList}>
-            <li>
-              <span className={styles.integrationIcon}>
-                <MdCalendarToday size={24} color="#4a90e2" />
-              </span>
-              Google Calendar
-            </li>
-            <li>
-              <span className={styles.integrationIcon}>
-                <MdChat size={24} color="#50c878" />
-              </span>
-              Slack
-            </li>
-            <li>
-              <span className={styles.integrationIcon}>
-                <MdNote size={24} color="#e67e22" />
-              </span>
-              Notion
-            </li>
-          </ul>
+          <p>
+            Added services: <b>{integrations?.length}</b>
+          </p>
+          {loading ? (
+            <div className="relative w-full h-full">
+              <ClipLoader
+                className="absolute right-[39%] top-1/2 transform translate-x-[-50%] translate-y-[-50%]"
+                color="#FABB18"
+                size={50}
+              />
+            </div>
+          ) : (
+            <ul className={styles.integrationList}>
+              {displayedIntegrations.map((integration) => (
+                <li className="flex justify-between" key={integration.id}>
+                  <p className="flex items-center m-0">
+                    <IntegrationIcon
+                      apiIcon={integration.api_icon}
+                      className="mr-2"
+                      fill="blue"
+                      width="35"
+                      height="35"
+                      viewBox="0 -64 640 640"
+                    />
+                    <span className="font-bold">
+                      {integration.service_name.toLocaleUpperCase() + " API"}
+                    </span>
+                  </p>
+                  <span className="flex">
+                    {integration.is_active ? (
+                      <CustomTooltip
+                        className="!cursor-auto"
+                        placement="top"
+                        title={"Integration ON"}
+                      >
+                        <FiCheckSquare className="text-lime-700" size={25} />
+                      </CustomTooltip>
+                    ) : (
+                      <CustomTooltip
+                        className="!cursor-auto"
+                        placement="top"
+                        title={"Integration OFF"}
+                      >
+                        <FaExclamationTriangle
+                          className="text-red-700"
+                          size={25}
+                        />
+                      </CustomTooltip>
+                    )}
+                  </span>
+                </li>
+              ))}
+              {Array.isArray(integrations) && integrations.length === 0 && (
+                <span className="text-2xl font-bold">
+                  You have not added any integrations!
+                </span>
+              )}
+
+              {integrations && integrations.length > SLICE_END && (
+                <li>
+                  <Link to="/dashboard/integrations">View All</Link>
+                </li>
+              )}
+            </ul>
+          )}
           <Link to="/dashboard/integrations" className={styles.navButton}>
             Go to Integrations
           </Link>
@@ -223,7 +294,7 @@ export const Dashboard = () => {
           </Link>
         </Card>
       </section>
-      <section className={`${styles.row}`}>
+      {/* <section className={`${styles.row}`}>
         <Card>
           <div className={`flex items-center ${styles.cardIcon}`}>
             <MdCelebration size={48} color="#e74c3c" className="mr-5" />
@@ -239,7 +310,7 @@ export const Dashboard = () => {
             View Achievements
           </Link>
         </Card>
-      </section>
+      </section> */}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 // import React, { ChangeEvent, useState } from "react";
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import {
   Avatar,
   // InputAdornment,
@@ -11,10 +11,10 @@ import {
 import styles from "./Header.module.scss";
 import Logo from "../../../shared/components/Logo";
 import LanguageSwitcher from "../../../shared/components/language-switcher/LanguageSwitcher";
-import { HiMoon, HiSun } from "react-icons/hi";
+// import { HiMoon, HiSun } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { t } from "i18next";
-import Button from "../../../shared/components/Button";
+// import Button from "../../../shared/components/Button";
 import { useAppDispatch } from "../../../shared/hooks/hooks";
 import { signOutUser } from "../../../store/slices/authSlice";
 import { showAlert } from "../../../store/slices/alertSlice";
@@ -27,15 +27,15 @@ interface HeaderProps {
 }
 
 const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
-  const [darkMode, setDarkMode] = useState(false);
+  // const [darkMode, setDarkMode] = useState(false);
   const dispatch = useAppDispatch();
   const navigation = useNavigate();
   // const [searchValue, setSearchValue] = useState("");
 
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-    document.body.classList.toggle("dark-mode", !darkMode);
-  };
+  // const toggleTheme = () => {
+  //   setDarkMode(!darkMode);
+  //   document.body.classList.toggle("dark-mode", !darkMode);
+  // };
 
   const handleLogout = async () => {
     try {
@@ -84,13 +84,13 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
           }}
         /> */}
         <LanguageSwitcher className={styles.languageSwitcher} />
-        <Button
+        {/* <Button
           type="button"
           onClick={toggleTheme}
           className={`${styles.themeToggle}`}
         >
           {darkMode ? <HiSun size={20} /> : <HiMoon size={20} />}
-        </Button>
+        </Button> */}
 
         <Avatar
           alt="User"

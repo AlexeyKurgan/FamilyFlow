@@ -3,6 +3,7 @@ import authReducer from './slices/authSlice';
 import alertReducer from './slices/alertSlice';
 import languageSlice from "./slices/languageSlice";
 import tasksSlice from "./slices/tasksSlice";
+import integrationsSlice from "./slices/integrationsSlice";
 
 export const store = configureStore(
     {
@@ -10,7 +11,8 @@ export const store = configureStore(
             auth: authReducer,
             alert: alertReducer,
             language: languageSlice,
-            tasks: tasksSlice
+            tasks: tasksSlice,
+            integrations: integrationsSlice,
         }
     }
 )

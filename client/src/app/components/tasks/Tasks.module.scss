@@ -8,8 +8,8 @@ $shadow-color: rgba(0, 0, 0, 0.1);
 
 .tasksContent {
     padding: 24px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 24px;
     background-color: #f5f7fa;
     font-family: "Roboto", sans-serif;

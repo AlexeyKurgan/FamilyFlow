@@ -9,7 +9,7 @@ const initialState = {
 }
 
 
-export const fetchUserById = createAsyncThunk<{ data: Task[] | null; error: PostgrestError | null }, FetchTasksParams, { rejectValue: string }>(
+export const fetchTasksUserById = createAsyncThunk<{ data: Task[] | null; error: PostgrestError | null }, FetchTasksParams, { rejectValue: string }>(
     'tasks/fetchTasksByUserId',
     async ({ user_uuid }: FetchTasksParams, { rejectWithValue }) => {
         try {
@@ -31,21 +31,21 @@ const tasksSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchUserById.pending, (state) => {
+            .addCase(fetchTasksUserById.pending, (state) => {
                 return {
                     ...state,
                     loading: true,
                     error: null
                 }
             })
-            .addCase(fetchUserById.fulfilled, (state, action) => {
+            .addCase(fetchTasksUserById.fulfilled, (state, action) => {
                 return {
                     ...state,
                     tasks: action.payload.data || [],
                     loading: false
                 }
             })
-            .addCase(fetchUserById.rejected, (state, action) => {
+            .addCase(fetchTasksUserById.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

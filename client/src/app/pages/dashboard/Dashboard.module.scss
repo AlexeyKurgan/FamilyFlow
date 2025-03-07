@@ -44,16 +44,16 @@ $shadow-color: rgba(0, 0, 0, 0.1);
 
     // Resources
     &:nth-child(5) {
-        grid-column: span 2 / span 2;
+        grid-column: span 3 / span 3;
         grid-row: span 2 / span 2;
         grid-row-start: 4;
     }
 
     // Rewards Shop
     &:nth-child(6) {
-        grid-column: span 2 / span 2;
+        grid-column: span 3 / span 3;
         grid-row: span 2 / span 2;
-        grid-column-start: 3;
+        grid-column-start: 4;
         grid-row-start: 4;
     }
 
