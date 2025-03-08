@@ -22,7 +22,6 @@ export const checkExistUser = async (email: string) => {
 
 export const checkUserSession = async () => {
     const { data: { session }, error } = await supabase.auth.getSession();
-    console.log("Current session:", session);
     if (error) {
         console.error("Session check error:", error);
         return null;

@@ -102,19 +102,6 @@ $shadow-color: rgba(0, 0, 0, 0.1);
             align-items: center;
             gap: 12px;
             padding: 8px 0;
-            color: $text-color;
-            font-size: 1rem;
-            line-height: 1.5;
-            border-bottom: 1px solid $light-bg;
-            transition: transform 0.3s ease;
-
-            &:hover {
-                transform: translateX(4px);
-            }
-
-            &:last-child {
-                border-bottom: none;
-            }
 
             .serviceIcon {
                 display: flex;

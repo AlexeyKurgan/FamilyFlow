@@ -1,20 +1,26 @@
-import React, { ChangeEvent, useState } from "react";
+// import React, { ChangeEvent, useState } from "react";
+// import React, { useState } from "react";
 import {
   Avatar,
-  InputAdornment,
+  // InputAdornment,
   Menu,
   MenuItem,
-  TextField,
+  // TextField,
   Typography,
 } from "@mui/material";
 import styles from "./Header.module.scss";
 import Logo from "../../../shared/components/Logo";
 import LanguageSwitcher from "../../../shared/components/language-switcher/LanguageSwitcher";
-import { HiMoon, HiSun } from "react-icons/hi";
-import { Link } from "react-router-dom";
+// import { HiMoon, HiSun } from "react-icons/hi";
+import { Link, useNavigate } from "react-router-dom";
 import { t } from "i18next";
-import Button from "../../../shared/components/Button";
-import { FaSearch } from "../../../shared/react-icons/icons";
+// import Button from "../../../shared/components/Button";
+import { useAppDispatch } from "../../../shared/hooks/hooks";
+import { signOutUser } from "../../../store/slices/authSlice";
+import { showAlert } from "../../../store/slices/alertSlice";
+import { RootState } from "../../../store/store";
+import { useSelector } from "react-redux";
+// import { FaSearch } from "../../../shared/react-icons/icons";
 
 interface HeaderProps {
   onAvatarClick: (event: React.MouseEvent<HTMLElement>) => void;
@@ -23,23 +29,32 @@ interface HeaderProps {
 }
 
 const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
+  // const [darkMode, setDarkMode] = useState(false);
+  const dispatch = useAppDispatch();
+  const navigation = useNavigate();
+  const { userProfile } = useSelector((state: RootState) => state.profile);
+  // const [searchValue, setSearchValue] = useState("");
+  // const toggleTheme = () => {
+  //   setDarkMode(!darkMode);
+  //   document.body.classList.toggle("dark-mode", !darkMode);
+  // };
 
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-    document.body.classList.toggle("dark-mode", !darkMode);
+  const handleLogout = async () => {
+    try {
+      await dispatch(signOutUser());
+      dispatch(
+        showAlert({ message: `Signed out successfully`, severity: "success" })
+      );
+      navigation("/");
+    } catch (error) {
+      dispatch(
+        showAlert({ message: `Sign out failed: ${error}`, severity: "error" })
+      );
+    }
+
+    const test = userProfile?.profiles[0]?.avatar_url?.toString() || "";
+    console.log(test);
   };
-
-  function handleLogout(): void {
-    console.log("logout");
-  }
-
-  function handleSearchChange(
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void {
-    setSearchValue(event.target.value);
-  }
 
   return (
     <header className={styles.header}>
@@ -47,7 +62,7 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
         <Logo classNames={styles.logo} />
       </div>
       <div className={styles.headerRight}>
-        <TextField
+        {/* <TextField
           name="search"
           id="search"
           label={t("SearchLabelInput")}
@@ -72,19 +87,19 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
               ),
             },
           }}
-        />
+        /> */}
         <LanguageSwitcher className={styles.languageSwitcher} />
-        <Button
+        {/* <Button
           type="button"
           onClick={toggleTheme}
           className={`${styles.themeToggle}`}
         >
           {darkMode ? <HiSun size={20} /> : <HiMoon size={20} />}
-        </Button>
+        </Button> */}
 
         <Avatar
-          alt="User"
-          src="/path/to/avatar.jpg"
+          alt={`${userProfile?.name} ${userProfile?.last_name}`}
+          src={userProfile?.profiles[0]?.avatar_url?.toString() || ""}
           onClick={onAvatarClick}
           className={styles.avatar}
         />
@@ -103,14 +118,14 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
         >
           <div className={styles.menuProfile}>
             <Avatar
-              alt={`Alex Kurhan`}
-              src="/path/to/avatar.jpg"
+              alt={`${userProfile?.name} ${userProfile?.last_name}`}
+              src={userProfile?.profiles[0]?.avatar_url?.toString() || ""}
               className={styles.menuAvatar}
             />
             <div>
-              <Typography variant="body1">{`Alex Kurhan`}</Typography>
+              <Typography variant="body1">{`${userProfile?.name} ${userProfile?.last_name}`}</Typography>
               <Typography variant="body2" color="text.secondary">
-                akurhan880@gmail.com
+                {userProfile?.email}
               </Typography>
             </div>
           </div>

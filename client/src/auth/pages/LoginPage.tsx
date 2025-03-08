@@ -19,7 +19,7 @@ const LoginPage = () => {
         <CustomTooltip
           placement="bottom"
           title={t("TooltipBackHome")}
-          className="top-5 left-5 rotate-180"
+          className="!absolute top-5 left-5 rotate-180"
           component={Link}
           pathUrl={"/"}
         >

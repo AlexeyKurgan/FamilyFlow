@@ -14,6 +14,7 @@ import {
   RiArrowRightDoubleLine,
 } from "../../../shared/react-icons/icons";
 import { useEffect } from "react";
+import Button from "../../../shared/components/Button";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -77,13 +78,19 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
           </Tooltip>
         ))}
       </nav>
-      <button onClick={onToggle} className={styles.toggleButton}>
+      <Button type="button" onClick={onToggle} className={styles.toggleButton}>
         {isOpen ? (
-          <RiArrowLeftDoubleLine className="animate-scale-animation" />
+          <RiArrowLeftDoubleLine
+            size={25}
+            className="animate-scale-animation"
+          />
         ) : (
-          <RiArrowRightDoubleLine className="animate-scale-animation" />
+          <RiArrowRightDoubleLine
+            size={25}
+            className="animate-scale-animation"
+          />
         )}
-      </button>
+      </Button>
     </aside>
   );
 };

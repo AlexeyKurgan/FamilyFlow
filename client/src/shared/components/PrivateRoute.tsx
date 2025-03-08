@@ -1,30 +1,23 @@
 import React, { useEffect, useState } from "react";
 import Loading from "../utils/loader/Loading";
 import { Navigate } from "react-router-dom";
-import { checkUserSession } from "../../auth/api/utils/userUtils";
-import { Session } from "@supabase/supabase-js";
+import { useSelector } from "react-redux";
+import { IAuthState } from "../../auth/types/authUser";
 
 interface IPrivateRouteProps {
   children: React.ReactNode;
 }
 
 const PrivateRoute = ({ children }: IPrivateRouteProps) => {
-  const [session, setSession] = useState<Session | null>(null);
+  const { session } = useSelector((state: { auth: IAuthState }) => state.auth);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const verifySession = async () => {
-      setIsLoading(true);
-      const currentSession = await checkUserSession();
-      setSession(currentSession);
+    const timer = setTimeout(() => {
       setIsLoading(false);
-    };
+    }, 500);
 
-    if (!session) {
-      verifySession();
-    } else {
-      setIsLoading(false);
-    }
+    return () => clearTimeout(timer);
   }, [isLoading, session]);
 
   if (isLoading) {

@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
+// import { supabase } from "../auth/constants/supabaseConfig";
 
 // Components
 import NotFoundPage from "./shared/pages/NotFoundPage";
@@ -14,6 +15,11 @@ import IntegrationsPage from "./app/pages/integrations/IntegrationsPage";
 import SettingsPage from "./app/pages/settings/SettingsPage";
 import AchievementPage from "./app/pages/achievement/AchievementPage";
 import RewardsShopPage from "./app/pages/pointstAssignments/RewardsShopPage";
+import { checkUserSession } from "./auth/api/utils/userUtils";
+import { setSession } from "./store/slices/authSlice";
+import { useAppDispatch } from "./shared/hooks/hooks";
+import { AuthChangeEvent, Session } from "@supabase/supabase-js";
+import { supabase } from "./auth/constants/supabaseConfig";
 
 // Lazy loading
 // Landing Pages
@@ -38,6 +44,33 @@ function App() {
   const { show, message, severity } = useSelector(
     (state: RootState) => state.alert
   );
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const currentSession = await checkUserSession();
+      if (currentSession) {
+        dispatch(setSession(currentSession));
+      }
+    };
+
+    fetchSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event: AuthChangeEvent, session: Session | null) => {
+        if (session) {
+          dispatch(setSession(session));
+        } else {
+          dispatch(setSession(null));
+        }
+      }
+    );
+
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
+  }, [dispatch]);
 
   return (
     <Suspense

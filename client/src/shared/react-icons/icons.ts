@@ -20,3 +20,8 @@ export { GrResources } from "react-icons/gr";
 export { IoMdSettings } from "react-icons/io";
 export { IoStorefront } from "react-icons/io5";
 export { GrAchievement } from "react-icons/gr";
+export { MdWavingHand } from "react-icons/md";
+
+export { FiCheckSquare } from "react-icons/fi";
+export { FaExclamationTriangle } from "react-icons/fa";
+export { GrIntegration } from "react-icons/gr";
