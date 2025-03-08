@@ -1,4 +1,4 @@
-import { AuthMode } from "../../auth/constants/authMode";
+import { AuthMode } from "../../auth/types/authMode";
 import { IAuthFormValues, IAuthFormErrors } from "../../auth/types/authFormValidation";
 
 export const validateAuthForm = (values: IAuthFormValues, mode: AuthMode, t: (key: string) => string): IAuthFormErrors => {

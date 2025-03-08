@@ -1,4 +1,4 @@
-import { AuthMode } from "../../auth/constants/authMode";
+import { AuthMode } from "../../auth/types/authMode";
 import CustomTooltip from "../../shared/components/tooltip/Tooltip";
 import AuthForm from "../components/AuthForm";
 import { GoArrowRight } from "../../shared/react-icons/icons";

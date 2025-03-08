@@ -19,7 +19,7 @@ import { useFormik } from "formik";
 import Button from "../../shared/components/Button";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AuthMode } from "../constants/authMode";
+import { AuthMode } from "../../auth/types/authMode";
 import { useSelector } from "react-redux";
 import { signUpUser, signInUser } from "../../store/slices/authSlice";
 import { showAlert } from "../../store/slices/alertSlice";
