@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import CustomTooltip from "../../shared/components/tooltip/Tooltip";
 import AuthForm from "../components/AuthForm";
-import { AuthMode } from "../constants/authMode";
+import { AuthMode } from "../../auth/constants/authMode";
 import { GoArrowRight } from "../../shared/react-icons/icons";
 import { useTranslation } from "react-i18next";
 

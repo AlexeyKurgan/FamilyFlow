@@ -1,4 +1,4 @@
-import { AuthMode } from "../constants/authMode"
+import { AuthMode } from "../../auth/constants/authMode"
 
 interface IAuthMode {
     mode: AuthMode.LOGIN | AuthMode.SIGN_UP | AuthMode.FORGOT_PASSWORD
