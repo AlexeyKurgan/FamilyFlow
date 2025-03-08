@@ -12,6 +12,8 @@ export interface Resources {
     type: string,
     url: string,
     favorites: boolean,
+    resource_image: string,
+    resource_icon: string,
     user_uuid: string
 }
 

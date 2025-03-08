@@ -18,6 +18,8 @@ import { t } from "i18next";
 import { useAppDispatch } from "../../../shared/hooks/hooks";
 import { signOutUser } from "../../../store/slices/authSlice";
 import { showAlert } from "../../../store/slices/alertSlice";
+import { RootState } from "../../../store/store";
+import { useSelector } from "react-redux";
 // import { FaSearch } from "../../../shared/react-icons/icons";
 
 interface HeaderProps {
@@ -30,8 +32,8 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
   // const [darkMode, setDarkMode] = useState(false);
   const dispatch = useAppDispatch();
   const navigation = useNavigate();
+  const { userProfile } = useSelector((state: RootState) => state.profile);
   // const [searchValue, setSearchValue] = useState("");
-
   // const toggleTheme = () => {
   //   setDarkMode(!darkMode);
   //   document.body.classList.toggle("dark-mode", !darkMode);
@@ -49,6 +51,9 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
         showAlert({ message: `Sign out failed: ${error}`, severity: "error" })
       );
     }
+
+    const test = userProfile?.profiles[0]?.avatar_url?.toString() || "";
+    console.log(test);
   };
 
   return (
@@ -93,8 +98,8 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
         </Button> */}
 
         <Avatar
-          alt="User"
-          src="/path/to/avatar.jpg"
+          alt={`${userProfile?.name} ${userProfile?.last_name}`}
+          src={userProfile?.profiles[0]?.avatar_url?.toString() || ""}
           onClick={onAvatarClick}
           className={styles.avatar}
         />
@@ -113,14 +118,14 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
         >
           <div className={styles.menuProfile}>
             <Avatar
-              alt={`Alex Kurhan`}
-              src="/path/to/avatar.jpg"
+              alt={`${userProfile?.name} ${userProfile?.last_name}`}
+              src={userProfile?.profiles[0]?.avatar_url?.toString() || ""}
               className={styles.menuAvatar}
             />
             <div>
-              <Typography variant="body1">{`Alex Kurhan`}</Typography>
+              <Typography variant="body1">{`${userProfile?.name} ${userProfile?.last_name}`}</Typography>
               <Typography variant="body2" color="text.secondary">
-                akurhan880@gmail.com
+                {userProfile?.email}
               </Typography>
             </div>
           </div>

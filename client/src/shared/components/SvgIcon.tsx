@@ -1,6 +1,6 @@
 import { GrIntegration } from "../react-icons/icons";
 
-interface IIntegrationIconProps {
+interface ISvgIconProps {
   apiIcon: string;
   className?: string;
   width?: string;
@@ -9,14 +9,14 @@ interface IIntegrationIconProps {
   viewBox?: string;
 }
 
-const IntegrationIcon = ({
+const SvgIcon = ({
   apiIcon,
   className,
   width,
   height,
   viewBox,
   fill,
-}: IIntegrationIconProps) => {
+}: ISvgIconProps) => {
   if (!apiIcon) {
     return <GrIntegration className={className} size={25} />;
   }
@@ -37,4 +37,4 @@ const IntegrationIcon = ({
   );
 };
 
-export default IntegrationIcon;
+export default SvgIcon;

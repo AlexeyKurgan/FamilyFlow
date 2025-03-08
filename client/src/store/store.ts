@@ -4,6 +4,9 @@ import alertReducer from './slices/alertSlice';
 import languageSlice from "./slices/languageSlice";
 import tasksSlice from "./slices/tasksSlice";
 import integrationsSlice from "./slices/integrationsSlice";
+import resourcesSlice from "./slices/resourcesSlice";
+import achievementsSlice from "./slices/achievementsSlice";
+import userProfileSlice from "./slices/profileSlice";
 
 export const store = configureStore(
     {
@@ -13,6 +16,9 @@ export const store = configureStore(
             language: languageSlice,
             tasks: tasksSlice,
             integrations: integrationsSlice,
+            resources: resourcesSlice,
+            achievements: achievementsSlice,
+            profile: userProfileSlice,
         }
     }
 )

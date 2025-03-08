@@ -8,13 +8,15 @@ export interface FetchAchievementsParams {
 
 export interface Achievements {
     id: number,
-    title: string,
+    name: string,
     description: string,
-    status: string,
+    image_url: string,
+    earned_at: string,
+    is_earned: boolean,
     user_uuid: string
 }
 
-export const fetchTasksByUserId = async (user_uuid: string): Promise<{ data: Achievements[] | null; error: PostgrestError | null }> => {
+export const fetchAchievementsByUserId = async (user_uuid: string): Promise<{ data: Achievements[] | null; error: PostgrestError | null }> => {
     const { data, error } = await supabase.from("achievements").select("*").eq("user_uuid", user_uuid);
 
     if (error) {

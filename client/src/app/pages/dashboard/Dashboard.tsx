@@ -1,25 +1,15 @@
 import styles from "./Dashboard.module.scss";
 import { Link } from "react-router-dom";
-import achievement1 from "../../../assets/images/achievements/blogger.png";
-import achievement2 from "../../../assets/images/achievements/chile.png";
-import achievement3 from "../../../assets/images/achievements/leadership.png";
-import achievement4 from "../../../assets/images/achievements/target.png";
-import achievement5 from "../../../assets/images/achievements/trophy.png";
 
 import {
-  // MdCalendarToday,
   MdTaskAlt,
   MdLink,
   MdBook,
   MdStorefront,
-  // MdCelebration,
-  // MdChat,
-  // MdNote,
   MdWavingHand,
 } from "react-icons/md";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { useCallback, useEffect, useState } from "react";
-// import { useCallback, useEffect, useMemo, useState } from "react";
 import Date from "../../../shared/components/date/Date";
 import Card from "../../../shared/components/card/Card";
 import { useSelector } from "react-redux";
@@ -40,10 +30,13 @@ import {
   FiCheckSquare,
 } from "../../../shared/react-icons/icons";
 import CustomTooltip from "../../../shared/components/tooltip/Tooltip";
-import IntegrationIcon from "../../../shared/components/IntegrationIcon";
+import SvgIcon from "../../../shared/components/SvgIcon";
+import { fetchResourcesUserById } from "../../../store/slices/resourcesSlice";
+import { ViewBoxType, viewBoxes } from "../../constants/constants";
+import { fetchAchievementsUserById } from "../../../store/slices/achievementsSlice";
+import { fetchUserProfile } from "../../../store/slices/profileSlice";
 
 export const Dashboard = () => {
-  const userName = "John Doe";
   const { session } = useSelector((state: { auth: IAuthState }) => state.auth);
   const { tasks, error, loading } = useSelector(
     (state: RootState) => state.tasks
@@ -51,8 +44,16 @@ export const Dashboard = () => {
   const { integrations } = useSelector(
     (state: RootState) => state.integrations
   );
+  const { achievements } = useSelector(
+    (state: RootState) => state.achievements
+  );
+  const { userProfile } = useSelector((state: RootState) => state.profile);
+  const { resources } = useSelector((state: RootState) => state.resources);
+
   const displayedTasks = useDisplayedSliceData(tasks);
   const displayedIntegrations = useDisplayedSliceData(integrations);
+  const displayedResources = useDisplayedSliceData(resources);
+  const displayedAchievements = useDisplayedSliceData(achievements);
 
   const [pieChartData, setPieChartData] = useState([
     { id: 0, value: 0, label: "Completed" },
@@ -60,6 +61,12 @@ export const Dashboard = () => {
     { id: 2, value: 0, label: "Pending" },
     { id: 3, value: 0, label: "Total" },
   ]);
+
+  const supportedTypes = ["video", "link", "book"];
+
+  const getViewBox = (type: ViewBoxType) => {
+    return viewBoxes[type] || "0 0 24 24";
+  };
 
   const handleDataUpdate = useCallback(
     (data: {
@@ -86,6 +93,9 @@ export const Dashboard = () => {
     if (session?.user.id) {
       dispatch(fetchTasksUserById({ user_uuid: session.user.id }));
       dispatch(fetchIntegrationsUserById({ user_uuid: session.user.id }));
+      dispatch(fetchResourcesUserById({ user_uuid: session.user.id }));
+      dispatch(fetchAchievementsUserById({ user_uuid: session.user.id }));
+      dispatch(fetchUserProfile({ user_uuid: session.user.id }));
     }
   }, [dispatch, session]);
 
@@ -109,7 +119,7 @@ export const Dashboard = () => {
         <Card className={`${styles.activityCard}`}>
           <div className={`flex items-start ${styles.cardIcon}`}>
             <MdWavingHand size={32} color="#000000" className="mr-5" />
-            <h2>Welcome, {userName}!</h2>
+            <h2>Welcome, {`${userProfile?.name} ${userProfile?.last_name}`}</h2>
           </div>
           <div className={styles.chartPlaceholder}>
             <PieChart
@@ -125,19 +135,19 @@ export const Dashboard = () => {
           <div className={styles.achievementsList}>
             <h3>Recent Achievements</h3>
             <ul className={styles.achievementsGrid}>
-              {[
-                achievement1,
-                achievement2,
-                achievement3,
-                achievement4,
-                achievement5,
-              ].map((src, index) => (
-                <li key={index}>
-                  <img
-                    src={src}
-                    alt={`Achievement ${index + 1}`}
-                    className={styles.achievementImage}
-                  />
+              {displayedAchievements.map((achievement) => (
+                <li key={achievement.id}>
+                  <CustomTooltip
+                    className="!cursor-auto"
+                    placement="top"
+                    title={achievement.name}
+                  >
+                    <img
+                      src={achievement.image_url}
+                      alt={achievement.description}
+                      className={styles.achievementImage}
+                    />
+                  </CustomTooltip>
                 </li>
               ))}
               <Link to="/dashboard/achievement">View All</Link>
@@ -203,7 +213,7 @@ export const Dashboard = () => {
               {displayedIntegrations.map((integration) => (
                 <li className="flex justify-between" key={integration.id}>
                   <p className="flex items-center m-0">
-                    <IntegrationIcon
+                    <SvgIcon
                       apiIcon={integration.api_icon}
                       className="mr-2"
                       fill="blue"
@@ -258,24 +268,55 @@ export const Dashboard = () => {
         </Card>
       </section>
       <section className={`${styles.row}`}>
-        <Card>
+        <Card className={`${styles.resourceCard}`}>
           <div className={`flex items-center ${styles.cardIcon}`}>
             <MdBook size={48} color="#2ecc71" className="mr-5" />
             <h2>Resources</h2>
           </div>
 
-          <p>Helpful Links:</p>
-          <ul>
-            <li>
-              <a href="#">Documentation</a>
-            </li>
-            <li>
-              <a href="#">Community Forum</a>
-            </li>
-            <li>
-              <a href="#">Support</a>
-            </li>
-          </ul>
+          <p>
+            Added resources: <b>{resources?.length}</b>
+          </p>
+          {loading ? (
+            <div className="relative w-full h-full">
+              <ClipLoader
+                className="absolute right-[39%] top-1/2 transform translate-x-[-50%] translate-y-[-50%]"
+                color="#FABB18"
+                size={50}
+              />
+            </div>
+          ) : (
+            <ul className={styles.integrationList}>
+              {displayedResources.map((resource) => (
+                <li className="flex justify-between" key={resource.id}>
+                  <p className="flex items-center m-0">
+                    {supportedTypes.includes(resource.type) && (
+                      <SvgIcon
+                        apiIcon={resource.resource_icon}
+                        className="mr-2"
+                        fill="blue"
+                        width="35"
+                        height="35"
+                        viewBox={getViewBox(resource.type)}
+                      />
+                    )}
+                    <span className="font-bold">{resource.title}</span>
+                  </p>
+                </li>
+              ))}
+              {Array.isArray(resources) && resources.length === 0 && (
+                <span className="text-2xl font-bold">
+                  You have not added any resources!
+                </span>
+              )}
+
+              {resources && resources.length > SLICE_END && (
+                <li>
+                  <Link to="/dashboard/resources">View All</Link>
+                </li>
+              )}
+            </ul>
+          )}
           <Link to="/dashboard/resources" className={styles.navButton}>
             Go to Resources
           </Link>
@@ -289,28 +330,17 @@ export const Dashboard = () => {
           </div>
 
           <p>Earn points and redeem rewards!</p>
+          <div className="w-full my-[10px] h-[250px] min-h-[250px] overflow-hidden">
+            <img
+              src="https://ayrkflghtzmabklwrpap.supabase.co/storage/v1/object/sign/Rewards%20images/Reward-Blog.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJSZXdhcmRzIGltYWdlcy9SZXdhcmQtQmxvZy5wbmciLCJpYXQiOjE3NDE0MzI0NjEsImV4cCI6MTc3Mjk2ODQ2MX0.wDxKTTjocW_FlivK_0fNgAHHJaSjkA2YOz94TCRZFVY"
+              alt="rewards image background"
+            />
+          </div>
           <Link to="/dashboard/rewards" className={styles.navButton}>
             Visit Shop
           </Link>
         </Card>
       </section>
-      {/* <section className={`${styles.row}`}>
-        <Card>
-          <div className={`flex items-center ${styles.cardIcon}`}>
-            <MdCelebration size={48} color="#e74c3c" className="mr-5" />
-            <h2>Achievements</h2>
-          </div>
-
-          <p>Completed Milestones:</p>
-          <ul>
-            <li>First Task Completed 🎉</li>
-            <li>Logged in 7 Days in a Row 🔥</li>
-          </ul>
-          <Link to="/dashboard/achievements" className={styles.navButton}>
-            View Achievements
-          </Link>
-        </Card>
-      </section> */}
     </div>
   );
 };
