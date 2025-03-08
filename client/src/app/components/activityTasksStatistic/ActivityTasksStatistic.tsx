@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import styles from "./activityTasksStatistic.module.scss";
+import styles from "./ActivityTasksStatistic.module.scss";
 import { useEffect, useState } from "react";
 import { RootState } from "../../../store/store";
 
