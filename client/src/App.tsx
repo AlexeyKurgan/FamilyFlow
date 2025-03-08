@@ -61,8 +61,10 @@ function App() {
       (event: AuthChangeEvent, session: Session | null) => {
         if (session) {
           dispatch(setSession(session));
+          console.log(event);
         } else {
           dispatch(setSession(null));
+          console.log(event);
         }
       }
     );
