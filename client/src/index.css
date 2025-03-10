@@ -1,6 +1,22 @@
 @import "tailwindcss";
 @config "../tailwind.config.ts";
 
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    background: #000000;
+    border-radius: 8px;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #fabb18;
+    border-radius: 8px;
+  }
+}
 /* --- Override animate spin --- */
 .slow-spin {
   animation: spin 3s linear infinite;
@@ -23,7 +39,7 @@
 
 .app-content {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  padding: 24px;
-  gap: 25px;
+  grid-template-columns: repeat(10, 1fr);
+  padding: 0 20px 0 20px;
+  gap: 35px;
 }

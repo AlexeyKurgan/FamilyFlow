@@ -15,52 +15,50 @@ $shadow-color: rgba(0, 0, 0, 0.1);
         margin-bottom: 0;
     }
 
-    // Date
     &:nth-child(1) {
-        grid-column: span 2 / span 2;
+        grid-column: span 3 / span 2;
+        align-items: baseline;
+    }
+
+    // Date
+    &:nth-child(2) {
+        grid-column: span 3 / span 2;
     }
 
     // Activity Bar
-    &:nth-child(2) {
-        grid-column: span 2 / span 2;
+    &:nth-child(3) {
+        grid-column: span 3 / span 4;
         grid-row: span 3 / span 3;
-        grid-column-start: 5;
+        grid-column-start: 7;
     }
 
     // Tasks
-    &:nth-child(3) {
-        grid-column: span 2 / span 2;
+    &:nth-child(4) {
+        grid-column: span 3 / span 3;
         grid-row: span 2 / span 2;
         grid-row-start: 2;
     }
 
     // Integrations
-    &:nth-child(4) {
-        grid-column: span 2 / span 2;
+    &:nth-child(5) {
+        grid-column: span 3 / span 3;
         grid-row: span 2 / span 2;
-        grid-column-start: 3;
+        grid-column-start: 1;
         grid-row-start: 2;
     }
 
     // Resources
-    &:nth-child(5) {
-        grid-column: span 3 / span 3;
+    &:nth-child(6) {
+        grid-column: span 5 / span 5;
         grid-row: span 2 / span 2;
         grid-row-start: 4;
     }
 
     // Rewards Shop
-    &:nth-child(6) {
-        grid-column: span 3 / span 3;
-        grid-row: span 2 / span 2;
-        grid-column-start: 4;
-        grid-row-start: 4;
-    }
-
-    // Achievements
     &:nth-child(7) {
-        grid-column: span 2 / span 2;
+        grid-column: span 5 / span 5;
         grid-row: span 2 / span 2;
+        grid-column-start: 6;
         grid-row-start: 4;
     }
 
@@ -106,7 +104,7 @@ $shadow-color: rgba(0, 0, 0, 0.1);
         font-size: 1rem;
         font-weight: 600;
         transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-        width: 60%;
+        width: 75%;
         margin: 0 auto;
         margin-top: auto;
         display: inline-block;

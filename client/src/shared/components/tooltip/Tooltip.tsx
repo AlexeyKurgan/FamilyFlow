@@ -14,6 +14,7 @@ const CustomTooltip = ({
   onMouseLeave,
   className,
   pathUrl,
+  disableRipple,
   component = "button",
 }: ITooltip) => {
   return (
@@ -24,6 +25,7 @@ const CustomTooltip = ({
           className
         )}
         onClick={onClick}
+        disableRipple={disableRipple}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         component={component}

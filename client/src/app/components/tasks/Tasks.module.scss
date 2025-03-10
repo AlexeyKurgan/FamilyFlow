@@ -7,10 +7,10 @@ $secondary-text: #666;
 $shadow-color: rgba(0, 0, 0, 0.1);
 
 .tasksContent {
-    padding: 24px;
+    padding: 0 24px 24px 24px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 15px;
     background-color: #f5f7fa;
     font-family: "Roboto", sans-serif;
 }
@@ -35,11 +35,11 @@ $shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 .card {
-    margin: 0 0 32px 0;
+    // margin: 0 0 32px 0;
     color: $text-color;
     box-shadow: 0 4px 12px $shadow-color;
     border-radius: $card-border-radius;
-    padding: 20px;
+    padding: 10px 20px;
     position: relative;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;

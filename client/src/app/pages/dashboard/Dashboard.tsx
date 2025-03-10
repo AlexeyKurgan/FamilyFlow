@@ -26,6 +26,7 @@ import {
 } from "../../hooks/displayedSliceData";
 import { fetchIntegrationsUserById } from "../../../store/slices/integrationsSlice";
 import {
+  FaCircleInfo,
   FaExclamationTriangle,
   FiCheckSquare,
 } from "../../../shared/react-icons/icons";
@@ -112,13 +113,29 @@ export const Dashboard = () => {
 
   return (
     <div className={`app-content ${styles.dashboardContent}`}>
+      <div className={`${styles.row}`}>
+        {/* <div className="flex"> */}
+        <h1 className="text-[2.3em]">Dashboard</h1>
+        <CustomTooltip
+          className=""
+          placement="top"
+          title={"INFO"}
+          component={"button"}
+        >
+          <FaCircleInfo size={25} />
+        </CustomTooltip>
+      </div>
       <section className={`${styles.row}`}>
         <Date classNames={`dateCard`} />
       </section>
       <section className={`${styles.row}`}>
         <Card className={`${styles.activityCard}`}>
           <div className={`flex items-start ${styles.cardIcon}`}>
-            <MdWavingHand size={32} color="#000000" className="mr-5" />
+            <MdWavingHand
+              size={32}
+              color="#000000"
+              className="mr-5 animate-wiggle"
+            />
             <h2>Welcome, {`${userProfile?.name} ${userProfile?.last_name}`}</h2>
           </div>
           <div className={styles.chartPlaceholder}>

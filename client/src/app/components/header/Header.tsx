@@ -20,6 +20,13 @@ import { signOutUser } from "../../../store/slices/authSlice";
 import { showAlert } from "../../../store/slices/alertSlice";
 import { RootState } from "../../../store/store";
 import { useSelector } from "react-redux";
+import {
+  MdNotifications,
+  MdNotificationsActive,
+} from "../../../shared/react-icons/icons";
+import { useEffect, useState } from "react";
+import NotificationMessage from "../notificationMessage/NotificationMessage";
+
 // import { FaSearch } from "../../../shared/react-icons/icons";
 
 interface HeaderProps {
@@ -33,11 +40,22 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigate();
   const { userProfile } = useSelector((state: RootState) => state.profile);
+  // const [isNotificationMessage, SetSsNotificationMessage] = useState(true);
+  const isNotificationMessage = false;
+  const [isVisibleNotificationPanel, SetIsVisibleNotificationPanel] =
+    useState(false);
   // const [searchValue, setSearchValue] = useState("");
   // const toggleTheme = () => {
   //   setDarkMode(!darkMode);
   //   document.body.classList.toggle("dark-mode", !darkMode);
   // };
+
+  const toggleNotificationMessage = () => {
+    SetIsVisibleNotificationPanel((prev) => !prev);
+    console.log(isVisibleNotificationPanel);
+  };
+
+  useEffect(() => {});
 
   const handleLogout = async () => {
     try {
@@ -51,9 +69,6 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
         showAlert({ message: `Sign out failed: ${error}`, severity: "error" })
       );
     }
-
-    const test = userProfile?.profiles[0]?.avatar_url?.toString() || "";
-    console.log(test);
   };
 
   return (
@@ -88,6 +103,26 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
             },
           }}
         /> */}
+
+        {isNotificationMessage ? (
+          <div className="relative">
+            <MdNotificationsActive
+              onClick={toggleNotificationMessage}
+              className="cursor-pointer hover:text-amber-400 animate-wiggle "
+              size={25}
+            />
+            <span className="absolute  text-left min-w-[40px] top-[-15px] right-[-30px] text-[15px] font-bold text-amber-800">
+              1
+            </span>
+          </div>
+        ) : (
+          <MdNotifications
+            onClick={toggleNotificationMessage}
+            className="cursor-pointer hover:text-amber-400 "
+            size={25}
+          />
+        )}
+        <NotificationMessage isPanelShow={isVisibleNotificationPanel} />
         <LanguageSwitcher className={styles.languageSwitcher} />
         {/* <Button
           type="button"

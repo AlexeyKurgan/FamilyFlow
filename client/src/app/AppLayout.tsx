@@ -28,7 +28,7 @@ const AppLayout = () => {
       />{" "}
       <div className={styles.mainContent}>
         <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
-        <Main className={styles.mainAppWrapper}>
+        <Main className={`${styles.mainAppWrapper} scrollbar`}>
           <Container>
             <Outlet />
           </Container>

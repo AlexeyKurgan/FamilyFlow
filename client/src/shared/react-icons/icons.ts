@@ -25,3 +25,11 @@ export { MdWavingHand } from "react-icons/md";
 export { FiCheckSquare } from "react-icons/fi";
 export { FaExclamationTriangle } from "react-icons/fa";
 export { GrIntegration } from "react-icons/gr";
+
+export { FaEdit } from "react-icons/fa";
+export { AiFillDelete } from "react-icons/ai";
+export { MdNoteAdd } from "react-icons/md";
+export { FaUserCircle } from "react-icons/fa";
+export { MdNotifications } from "react-icons/md";
+export { MdNotificationsActive } from "react-icons/md";
+export { FaCircleInfo } from "react-icons/fa6";

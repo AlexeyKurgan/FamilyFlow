@@ -10,6 +10,7 @@ interface ITooltip {
     placement: TooltipProps["placement"]
     title: string,
     children: ReactNode,
+    disableRipple?: boolean,
     onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
     onMouseEnter?: (event: MouseEvent<HTMLButtonElement>) => void;
     onMouseLeave?: (event: MouseEvent<HTMLButtonElement>) => void
