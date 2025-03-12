@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { FetchTasksParams, Task, fetchTasksByUserId } from "../../app/api/tasks/tasksRequest";
+import { FetchTasksParams, fetchTasksByUserId, Task } from "../../app/api/tasks/tasksRequest";
+
 import { PostgrestError } from "@supabase/supabase-js";
 
 const initialState = {

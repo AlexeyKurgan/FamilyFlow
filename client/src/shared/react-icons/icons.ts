@@ -33,3 +33,5 @@ export { FaUserCircle } from "react-icons/fa";
 export { MdNotifications } from "react-icons/md";
 export { MdNotificationsActive } from "react-icons/md";
 export { FaCircleInfo } from "react-icons/fa6";
+export { TbFlag3Filled } from "react-icons/tb";
+export { FaTableList } from "react-icons/fa6";

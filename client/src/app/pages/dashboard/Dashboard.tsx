@@ -29,6 +29,7 @@ import {
   FaCircleInfo,
   FaExclamationTriangle,
   FiCheckSquare,
+  TbFlag3Filled,
 } from "../../../shared/react-icons/icons";
 import CustomTooltip from "../../../shared/components/tooltip/Tooltip";
 import SvgIcon from "../../../shared/components/SvgIcon";
@@ -36,6 +37,7 @@ import { fetchResourcesUserById } from "../../../store/slices/resourcesSlice";
 import { ViewBoxType, viewBoxes } from "../../constants/constants";
 import { fetchAchievementsUserById } from "../../../store/slices/achievementsSlice";
 import { fetchUserProfile } from "../../../store/slices/profileSlice";
+import clsx from "clsx";
 
 export const Dashboard = () => {
   const { session } = useSelector((state: { auth: IAuthState }) => state.auth);
@@ -114,7 +116,6 @@ export const Dashboard = () => {
   return (
     <div className={`app-content ${styles.dashboardContent}`}>
       <div className={`${styles.row}`}>
-        {/* <div className="flex"> */}
         <h1 className="text-[2.3em]">Dashboard</h1>
         <CustomTooltip
           className=""
@@ -190,7 +191,23 @@ export const Dashboard = () => {
           ) : (
             <ul>
               {displayedTasks.map((task) => (
-                <li key={task.id}>{task.title}</li>
+                <li className="flex justify-between items-center" key={task.id}>
+                  <span>{task.title}</span>
+                  <span className="flex">
+                    <TbFlag3Filled
+                      size={25}
+                      className={clsx(
+                        "mr-2",
+                        { "text-red-700": task.priority === "urgent" },
+                        { "text-amber-500": task.priority === "high" },
+                        { "text-emerald-600": task.priority === "medium" },
+                        { "text-blue-400": task.priority === "normal" },
+                        { "text-gray-300": task.priority === "low" }
+                      )}
+                    />
+                    {task.priority.toLocaleUpperCase()}
+                  </span>
+                </li>
               ))}
               {Array.isArray(tasks) && tasks.length === 0 && (
                 <span className="text-2xl font-bold">You have not tasks!</span>
