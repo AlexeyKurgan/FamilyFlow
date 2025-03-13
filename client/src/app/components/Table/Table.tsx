@@ -13,6 +13,7 @@ import { fetchTasksUserById } from "../../../store/slices/tasksSlice";
 import { useAppDispatch } from "../../../shared/hooks/hooks";
 import { ClipLoader } from "react-spinners";
 import { useSearchParams } from "react-router-dom";
+import { showModal } from "../../../store/slices/modalSlice";
 
 const Table = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -76,6 +77,31 @@ const Table = () => {
   }, [currentPage, filteredTasks]);
 
   const totalPages = Math.ceil((tasks?.length || 0) / itemsPerPage);
+
+  const onAddModal = () => {
+    dispatch(
+      showModal({
+        title: "Add Task",
+        type: "add",
+      })
+    );
+  };
+  const onEditModal = () => {
+    dispatch(
+      showModal({
+        title: "Edit Task",
+        type: "edit",
+      })
+    );
+  };
+  const onDeleteModal = () => {
+    dispatch(
+      showModal({
+        title: "Delete Task",
+        type: "delete",
+      })
+    );
+  };
 
   return (
     <div className="bg-gray-900 text-white rounded-lg shadow-lg">
@@ -173,6 +199,7 @@ const Table = () => {
                   disableRipple={true}
                   title={"Add Task"}
                   component={"div"}
+                  onClick={onAddModal}
                 >
                   <MdNoteAdd
                     size={25}
@@ -185,6 +212,7 @@ const Table = () => {
                   disableRipple={true}
                   title={"Edit task"}
                   component={"div"}
+                  onClick={onEditModal}
                 >
                   <FaEdit
                     className="text-white group-hover:text-amber-400"
@@ -197,6 +225,7 @@ const Table = () => {
                   disableRipple={true}
                   title={"Delete task"}
                   component={"div"}
+                  onClick={onDeleteModal}
                 >
                   <AiFillDelete
                     className="text-white group-hover:text-amber-400"

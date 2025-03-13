@@ -43,3 +43,18 @@
   padding: 0 20px 0 20px;
   gap: 35px;
 }
+
+/* Global Styles for Modals */
+.base-modal {
+  .MuiDialog-paper {
+    width: 100%;
+
+    .MuiDialogContent-root {
+      padding: 25px;
+    }
+
+    .MuiDialogActions-root {
+      /*  */
+    }
+  }
+}

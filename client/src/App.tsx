@@ -20,6 +20,7 @@ import { setSession } from "./store/slices/authSlice";
 import { useAppDispatch } from "./shared/hooks/hooks";
 import { AuthChangeEvent, Session } from "@supabase/supabase-js";
 import { supabase } from "./auth/constants/supabaseConfig";
+import LayoutModal from "./shared/components/modal/LayoutModal";
 
 // Lazy loading
 // Landing Pages
@@ -112,6 +113,7 @@ function App() {
       </Routes>
 
       {show && <AlertMUI message={message} severity={severity} show={show} />}
+      <LayoutModal />
     </Suspense>
   );
 }
