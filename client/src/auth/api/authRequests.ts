@@ -14,7 +14,13 @@ interface SupabaseUser {
     email: string;
 }
 
-export const signUpRequest = async (email: string, password: string, name: string, last_name: string): Promise<UserData | null> => {
+export const signUpRequest = async (email: string,
+    password: string,
+    name: string,
+    last_name: string,
+    familyOption: string,
+    familyId: string): Promise<UserData | null> => {
+
     // check user exist
     const existingUser = await checkExistUser(email);
     if (existingUser) {
@@ -28,8 +34,10 @@ export const signUpRequest = async (email: string, password: string, name: strin
         throw new Error('User object or email is missing after sign-up.')
     }
 
+    const finalFamilyId = familyOption === "create" ? crypto.randomUUID() : familyId || null;
+
     //insert new user data to table users
-    const insertData = await InsertToUserSupaBaseTableData(user as SupabaseUser, name, last_name);
+    const insertData = await InsertToUserSupaBaseTableData(user as SupabaseUser, name, last_name, finalFamilyId);
 
     return insertData;
 };

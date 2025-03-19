@@ -20,7 +20,7 @@ export const registerUserWithSupaBase = async (email: string, password: string) 
     return authData?.user
 }
 
-export const InsertToUserSupaBaseTableData = async (user: SupabaseUser, name: string, last_name: string) => {
+export const InsertToUserSupaBaseTableData = async (user: SupabaseUser, name: string, last_name: string, familyId: string | null) => {
     if (!user.email) {
         throw new Error(`User email is undefined: ${user.email}`)
     }
@@ -32,7 +32,8 @@ export const InsertToUserSupaBaseTableData = async (user: SupabaseUser, name: st
                 uuid: user.id,
                 name,
                 last_name,
-                email: user.email
+                email: user.email,
+                family_id: familyId
             }
         ]).select();
 

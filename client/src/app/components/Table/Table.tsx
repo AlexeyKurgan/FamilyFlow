@@ -33,36 +33,52 @@ const Table = () => {
     }
   }, [dispatch, session]);
 
-  const preparedTasks = useMemo(() => {
-    return tasks?.map((task) => {
-      const creator = Array.isArray(task.creator)
-        ? task.creator.filter((user) => user.name)
-        : [task.creator];
-      const assigned = Array.isArray(task.assigned)
-        ? task.assigned.filter((user) => user.name)
-        : [task.assigned];
-
-      return {
-        ...task,
-        creatorName:
-          creator.length > 0
-            ? `${creator[0].name} ${creator[0].last_name}`
-            : "Unknown",
-        assignedName:
-          assigned.length > 0
-            ? `${assigned[0].name} ${assigned[0].last_name}`
-            : "Unknown",
-      };
+  const getNewFormateDate = (date: Date) => {
+    const newDate = new Date(date).toLocaleString("en-US", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "UTC",
     });
-  }, [tasks]);
+    return newDate;
+  };
+
+  const preparedTasks = useMemo(() => {
+    if (!session?.user.id) return [];
+    const mappedTasks = tasks
+      ?.filter((task) => task.assigned_to === session.user.id)
+      .map((task) => {
+        const creator = Array.isArray(task.creator)
+          ? task.creator
+          : [task.creator];
+        const assigned = Array.isArray(task.assigned)
+          ? task.assigned
+          : [task.assigned];
+        return {
+          ...task,
+          creatorName:
+            creator.length > 0
+              ? `${creator[0].name} ${creator[0].last_name}`
+              : "Unknown",
+          assignedName:
+            assigned.length > 0
+              ? `${assigned[0].name} ${assigned[0].last_name}`
+              : "Unknown",
+        };
+      });
+    return mappedTasks?.sort((a, b) => {
+      return (
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+    });
+  }, [tasks, session?.user.id]);
 
   const filteredTasks = useMemo(() => {
     return preparedTasks?.filter((task) => {
       const searchLower = searchValue.toLowerCase();
-
-      const matchesSearch = task.title
-        .toLowerCase()
-        .includes(searchLower.toLowerCase());
+      const matchesSearch = task.title.toLowerCase().includes(searchLower);
       const matchesStatus =
         statusFilter === "all" || task.status === statusFilter;
       const matchesPriority =
@@ -76,7 +92,7 @@ const Table = () => {
     return filteredTasks?.slice(startIndex, startIndex + itemsPerPage);
   }, [currentPage, filteredTasks]);
 
-  const totalPages = Math.ceil((tasks?.length || 0) / itemsPerPage);
+  const totalPages = Math.ceil((filteredTasks?.length || 0) / itemsPerPage);
 
   const onAddModal = () => {
     dispatch(
@@ -86,19 +102,23 @@ const Table = () => {
       })
     );
   };
-  const onEditModal = () => {
+
+  const onEditModal = (taskId: number) => {
     dispatch(
       showModal({
         title: "Edit Task",
         type: "edit",
+        taskId,
       })
     );
   };
-  const onDeleteModal = () => {
+
+  const onDeleteModal = (taskId: number) => {
     dispatch(
       showModal({
         title: "Delete Task",
         type: "delete",
+        taskId,
       })
     );
   };
@@ -107,7 +127,7 @@ const Table = () => {
     <div className="bg-gray-900 text-white rounded-lg shadow-lg">
       {/* Header */}
       <div
-        className="grid grid-cols-[14%_25%_9%_9%_11%_12%_repeat(auto-fit,minmax(50px,1fr))]
+        className="grid grid-cols-[13%_20%_9%_7%_12%_12%_14%_4%_4%_repeat(auto-fit,minmax(50px,1fr))]
          gap-2 bg-[#fabb18]
          text-[1.2em]
          text-black font-bold py-6 px-4"
@@ -118,7 +138,7 @@ const Table = () => {
         <span className="flex items-center">Priority</span>
         <span className="flex items-center">Creator Name</span>
         <span className="flex items-center">Assigned By</span>
-        <span></span>
+        <span className="flex items-center">created_at</span>
         <span></span>
         <span></span>
       </div>
@@ -134,9 +154,8 @@ const Table = () => {
             {paginatedTasks?.map((task) => (
               <div
                 key={task.id}
-                className="grid grid-cols-[14%_25%_9%_9%_11%_12%_repeat(auto-fit,minmax(50px,1fr))] 
-                         gap-2 border-b-4 border-amber-400 last:border-b-0 bg-gray-800 py-6 px-4
-                         "
+                className="grid grid-cols-[13%_20%_9%_7%_12%_12%_14%_4%_4%_repeat(auto-fit,minmax(50px,1fr))] 
+                         gap-2 border-b-4 border-amber-400 last:border-b-0 bg-gray-800 py-6 px-4"
               >
                 <CustomTooltip
                   className="!cursor-auto !rounded-[0] !text-white !text-[1em] !justify-start !relative"
@@ -174,7 +193,6 @@ const Table = () => {
                 >
                   <span className="truncate">{task.priority}</span>
                 </CustomTooltip>
-
                 <CustomTooltip
                   className="!cursor-auto !rounded-[0] !text-white !text-[1em] !justify-start"
                   placement="top"
@@ -194,17 +212,16 @@ const Table = () => {
                   <span className="truncate">{task.assignedName}</span>
                 </CustomTooltip>
                 <CustomTooltip
-                  className="group !static"
+                  className="!cursor-auto !rounded-[0] !text-white !text-[1em] !justify-start"
                   placement="top"
                   disableRipple={true}
-                  title={"Add Task"}
+                  title={getNewFormateDate(task.created_at)}
                   component={"div"}
                   onClick={onAddModal}
                 >
-                  <MdNoteAdd
-                    size={25}
-                    className="text-white group-hover:text-amber-400"
-                  />
+                  <span className="truncate">
+                    {getNewFormateDate(task.created_at)}
+                  </span>
                 </CustomTooltip>
                 <CustomTooltip
                   className="group"
@@ -212,7 +229,7 @@ const Table = () => {
                   disableRipple={true}
                   title={"Edit task"}
                   component={"div"}
-                  onClick={onEditModal}
+                  onClick={() => onEditModal(task.id)}
                 >
                   <FaEdit
                     className="text-white group-hover:text-amber-400"
@@ -225,7 +242,7 @@ const Table = () => {
                   disableRipple={true}
                   title={"Delete task"}
                   component={"div"}
-                  onClick={onDeleteModal}
+                  onClick={() => onDeleteModal(task.id)}
                 >
                   <AiFillDelete
                     className="text-white group-hover:text-amber-400"
@@ -250,7 +267,9 @@ const Table = () => {
           <FaTableList size={25} className="text-amber-400 mr-3.5" />
           <p>
             Total Tasks:{" "}
-            <span className="font-bold text-[1.2em]">{tasks?.length}</span>
+            <span className="font-bold text-[1.2em]">
+              {filteredTasks?.length}
+            </span>
           </p>
         </div>
         <button
@@ -270,6 +289,25 @@ const Table = () => {
         >
           Next
         </button>
+        <div className="absolute bottom-[0px] right-[14px]">
+          <div className="absolute right-[7px] flex">
+            <div className="absolute top-0 left-0 size-3 max-h-[12px] inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></div>
+            <div className="relative inline-flex justify-end size-3 rounded-full bg-amber-600"></div>
+          </div>
+          <CustomTooltip
+            className="group !static ml-auto"
+            placement="top"
+            disableRipple={true}
+            title={"Add Task"}
+            component={"div"}
+            onClick={onAddModal}
+          >
+            <MdNoteAdd
+              size={35}
+              className="text-white group-hover:text-amber-400"
+            />
+          </CustomTooltip>
+        </div>
       </div>
     </div>
   );

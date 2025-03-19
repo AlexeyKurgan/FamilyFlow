@@ -1,20 +1,9 @@
-// import React, { ChangeEvent, useState } from "react";
-// import React, { useState } from "react";
-import {
-  Avatar,
-  // InputAdornment,
-  Menu,
-  MenuItem,
-  // TextField,
-  Typography,
-} from "@mui/material";
+import { Avatar, Menu, MenuItem, Typography } from "@mui/material";
 import styles from "./Header.module.scss";
 import Logo from "../../../shared/components/Logo";
 import LanguageSwitcher from "../../../shared/components/language-switcher/LanguageSwitcher";
-// import { HiMoon, HiSun } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { t } from "i18next";
-// import Button from "../../../shared/components/Button";
 import { useAppDispatch } from "../../../shared/hooks/hooks";
 import { signOutUser } from "../../../store/slices/authSlice";
 import { showAlert } from "../../../store/slices/alertSlice";
@@ -24,10 +13,12 @@ import {
   MdNotifications,
   MdNotificationsActive,
 } from "../../../shared/react-icons/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import NotificationMessage from "../notificationMessage/NotificationMessage";
-
-// import { FaSearch } from "../../../shared/react-icons/icons";
+import { supabase } from "../../../auth/constants/supabaseConfig";
+import { Task } from "../../../app/api/tasks/tasksRequest";
+import { addNotification } from "../../../store/slices/notificationsSlice";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
 interface HeaderProps {
   onAvatarClick: (event: React.MouseEvent<HTMLElement>) => void;
@@ -36,34 +27,141 @@ interface HeaderProps {
 }
 
 const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
-  // const [darkMode, setDarkMode] = useState(false);
   const dispatch = useAppDispatch();
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   const { userProfile } = useSelector((state: RootState) => state.profile);
-  // const [isNotificationMessage, SetSsNotificationMessage] = useState(true);
-  const isNotificationMessage = false;
-  const [isVisibleNotificationPanel, SetIsVisibleNotificationPanel] =
+  const { session } = useSelector((state: RootState) => state.auth);
+  const notifications = useSelector(
+    (state: RootState) => state.notifications.notifications
+  );
+
+  const [isVisibleNotificationPanel, setIsVisibleNotificationPanel] =
     useState(false);
-  // const [searchValue, setSearchValue] = useState("");
-  // const toggleTheme = () => {
-  //   setDarkMode(!darkMode);
-  //   document.body.classList.toggle("dark-mode", !darkMode);
-  // };
+  const hasUnreadNotifications = notifications.some((n) => !n.isRead);
+  const subscriptionRef = useRef<RealtimeChannel | null>(null);
 
   const toggleNotificationMessage = () => {
-    SetIsVisibleNotificationPanel((prev) => !prev);
-    console.log(isVisibleNotificationPanel);
+    setIsVisibleNotificationPanel((prev) => !prev);
   };
 
-  useEffect(() => {});
+  useEffect(() => {
+    if (!session?.user.id) {
+      if (subscriptionRef.current) {
+        supabase.removeChannel(subscriptionRef.current);
+        subscriptionRef.current = null;
+      }
+      return;
+    }
+
+    const subscribeToTasks = () => {
+      if (subscriptionRef.current) {
+        supabase.removeChannel(subscriptionRef.current);
+      }
+
+      const subscription = supabase.channel(`tasks-channel-${session.user.id}`);
+
+      subscription
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "tasks",
+            filter: `assigned_to=eq.${session.user.id}`,
+          },
+          (payload) => {
+            const newTask = payload.new as Task;
+            console.log("New task received:", newTask);
+            console.log("Current user ID:", session.user.id);
+            if (newTask.assigned_to === session.user.id) {
+              dispatch(
+                addNotification({
+                  id: newTask.id,
+                  title: newTask.title,
+                  message: `New task assigned: ${newTask.title}`,
+                  timestamp: new Date().toLocaleString(),
+                  created_at: new Date().toISOString(),
+                })
+              );
+            }
+          }
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "UPDATE",
+            schema: "public",
+            table: "tasks",
+            filter: `assigned_to=eq.${session.user.id}`,
+          },
+          (payload) => {
+            const updatedTask = payload.new as Task;
+            if (updatedTask.assigned_to === session.user.id) {
+              dispatch(
+                addNotification({
+                  id: updatedTask.id,
+                  title: updatedTask.title,
+                  message: `Task updated: ${updatedTask.title}`,
+                  timestamp: new Date().toLocaleString(),
+                  created_at: new Date().toISOString(),
+                })
+              );
+            }
+          }
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "deleted_tasks",
+            filter: `creator_id=eq.${session.user.id}`,
+          },
+          (payload) => {
+            const deletedTask = payload.new;
+            if (deletedTask.creator_id === session.user.id) {
+              dispatch(
+                addNotification({
+                  id: deletedTask.id,
+                  title: deletedTask.title,
+                  message: `Task was deleted: ${deletedTask.title}`,
+                  timestamp: new Date().toLocaleString(),
+                  created_at: new Date().toISOString(),
+                })
+              );
+            }
+          }
+        )
+        .subscribe((status) => {
+          if (status === "SUBSCRIBED") {
+            console.log("Successfully subscribed to tasks-channel");
+          } else if (status === "CHANNEL_ERROR") {
+            console.error("Channel error occurred, attempting to resubscribe");
+            subscriptionRef.current?.unsubscribe();
+            subscribeToTasks();
+          }
+        });
+
+      subscriptionRef.current = subscription;
+    };
+
+    subscribeToTasks();
+
+    return () => {
+      if (subscriptionRef.current) {
+        supabase.removeChannel(subscriptionRef.current);
+        subscriptionRef.current = null;
+      }
+    };
+  }, [session?.user.id, dispatch]);
 
   const handleLogout = async () => {
     try {
       await dispatch(signOutUser());
       dispatch(
-        showAlert({ message: `Signed out successfully`, severity: "success" })
+        showAlert({ message: "Signed out successfully", severity: "success" })
       );
-      navigation("/");
+      navigate("/");
     } catch (error) {
       dispatch(
         showAlert({ message: `Sign out failed: ${error}`, severity: "error" })
@@ -77,61 +175,26 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
         <Logo classNames={styles.logo} />
       </div>
       <div className={styles.headerRight}>
-        {/* <TextField
-          name="search"
-          id="search"
-          label={t("SearchLabelInput")}
-          type="text"
-          value={searchValue}
-          onChange={handleSearchChange}
-          variant="outlined"
-          sx={{
-            "& label.Mui-focused": { color: "#ffb900" },
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": { borderColor: "#ffb900" },
-              "&:hover fieldset": { borderColor: "black" },
-              "&.Mui-focused fieldset": { borderColor: "#ffb900" },
-            },
-          }}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <FaSearch className="text-amber-400" size={20} />
-                </InputAdornment>
-              ),
-            },
-          }}
-        /> */}
-
-        {isNotificationMessage ? (
+        {hasUnreadNotifications ? (
           <div className="relative">
             <MdNotificationsActive
               onClick={toggleNotificationMessage}
-              className="cursor-pointer hover:text-amber-400 animate-wiggle "
+              className="cursor-pointer hover:text-amber-400 animate-wiggle"
               size={25}
             />
-            <span className="absolute  text-left min-w-[40px] top-[-15px] right-[-30px] text-[15px] font-bold text-amber-800">
-              1
+            <span className="absolute text-left min-w-[40px] top-[-15px] right-[-30px] text-[15px] font-bold text-amber-800">
+              {notifications.filter((n) => !n.isRead).length}
             </span>
           </div>
         ) : (
           <MdNotifications
             onClick={toggleNotificationMessage}
-            className="cursor-pointer hover:text-amber-400 "
+            className="cursor-pointer hover:text-amber-400"
             size={25}
           />
         )}
         <NotificationMessage isPanelShow={isVisibleNotificationPanel} />
         <LanguageSwitcher className={styles.languageSwitcher} />
-        {/* <Button
-          type="button"
-          onClick={toggleTheme}
-          className={`${styles.themeToggle}`}
-        >
-          {darkMode ? <HiSun size={20} /> : <HiMoon size={20} />}
-        </Button> */}
-
         <Avatar
           alt={`${userProfile?.name} ${userProfile?.last_name}`}
           src={userProfile?.profiles[0]?.avatar_url?.toString() || ""}

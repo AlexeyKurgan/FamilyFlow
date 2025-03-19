@@ -12,6 +12,7 @@ export interface Achievements {
     description: string,
     image_url: string,
     earned_at: string,
+    creator_id: string,
     is_earned: boolean,
     user_uuid: string
 }

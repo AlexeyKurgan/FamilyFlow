@@ -3,6 +3,7 @@ const Button = ({
   className,
   type,
   disabled,
+  form,
   onClick,
 }: {
   children: React.ReactNode;
@@ -11,6 +12,7 @@ const Button = ({
   onClick?: () => void;
   onSubmit?: () => void;
   disabled?: boolean;
+  form?: string;
 }) => {
   return (
     <>
@@ -18,6 +20,7 @@ const Button = ({
         type={type}
         onClick={onClick}
         disabled={disabled}
+        form={form}
         className={`
             border-2
             border-transparent

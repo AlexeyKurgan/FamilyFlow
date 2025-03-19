@@ -1,7 +1,9 @@
 import { FaCircleInfo } from "react-icons/fa6";
 import CustomTooltip from "../../../shared/components/tooltip/Tooltip";
-import TaskForm from "./components/TaskForm";
 import styles from "./Tasks.module.scss";
+import { Box } from "@mui/material";
+import TaskFilters from "./components/TaskFilters";
+import Table from "../Table/Table";
 
 export const Tasks = () => {
   return (
@@ -18,7 +20,10 @@ export const Tasks = () => {
         </CustomTooltip>
       </div>
 
-      <TaskForm />
+      <Box>
+        <TaskFilters />
+        <Table />
+      </Box>
     </div>
   );
 };

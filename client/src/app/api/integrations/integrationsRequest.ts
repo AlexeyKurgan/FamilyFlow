@@ -12,6 +12,7 @@ export interface Integrations {
     apiKey: string,
     serviceApiUrl: string,
     is_active: boolean,
+    creator_id: string,
     api_icon: string,
     user_uuid: string
 }

@@ -1,36 +1,60 @@
-interface notificationMessageProps {
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
+import { markAllNotificationsAsRead } from "../../../store/slices/notificationsSlice";
+import { useAppDispatch } from "../../../shared/hooks/hooks";
+import { useEffect } from "react";
+
+interface NotificationMessageProps {
   isPanelShow: boolean;
-  // onMenuClose: () => void;
-  //   anchorEl: null | HTMLElement;
 }
 
-const NotificationMessage = ({ isPanelShow }: notificationMessageProps) => {
+const NotificationMessage = ({ isPanelShow }: NotificationMessageProps) => {
+  const dispatch = useAppDispatch();
+  const notifications = useSelector(
+    (state: RootState) => state.notifications.notifications
+  );
+
+  useEffect(() => {
+    if (isPanelShow) {
+      dispatch(markAllNotificationsAsRead());
+    }
+  }, [isPanelShow, dispatch]);
+
   return (
     <>
       {isPanelShow && (
         <div
-          className=" bg-black border-amber-400 rounded-md z-10 absolute p-[20px] top-[45px] left-[-600px] w-[750px] h-[350px] 
-        max-h-[450px] max-w-[750px] overflow-hidden"
+          className="bg-black border-amber-400 rounded-md z-10 absolute p-[20px] top-[45px] left-[-600px] w-[750px] h-[350px] 
+          max-h-[450px] max-w-[750px] overflow-hidden"
         >
-          <ul className="text-[.8em] h-full font-bold list-none border-2 scrollbar overflow-auto">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => (
-              <li
-                key={index}
-                className="flex items-center justify-between mb-2.5 nth-[odd]:bg-amber-400 mr-[20px] nth-[odd]:text-black nth-[even]:text-amber-400"
-              >
-                <span className="p-1.5 min-w-[120px]">выучить Реакт</span>
-                <p className="p-1.5 max-w-[250px] min-w-[250px] overflow-hidden">
-                  как можно поскрее. Это строка нужна для тестирования длинны
-                  текста что бы потом можно его было обрезать
-                </p>
-                <p className="p-1.5">Олена Курган</p>
-                <p className="p-1.5">
-                  <span>18 March</span>
-                  <span> 2025 |</span>
-                  <span> 18:35 AM</span>
-                </p>
+          <ul className="text-[.8em] h-full font-bold list-none border-2 border-amber-400 scrollbar overflow-auto">
+            {notifications.length === 0 ? (
+              <li className="text-amber-400 text-center p-4">
+                no notifications
               </li>
-            ))}
+            ) : (
+              notifications.map((notification, index) => (
+                <li
+                  key={index}
+                  className={`flex items-center justify-between mb-2.5 mr-[20px] ${
+                    index % 2 === 0
+                      ? "bg-amber-400 text-black"
+                      : "text-amber-400"
+                  }`}
+                >
+                  <span className="p-1.5 min-w-[120px] truncate">
+                    {notification.title}
+                  </span>
+                  <p className="p-1.5 max-w-[250px] min-w-[250px] overflow-hidden truncate">
+                    {notification.message}
+                  </p>
+                  <p className="p-1.5 min-w-[120px] truncate">System</p>
+                  <p className="p-1.5 min-w-[150px] truncate">
+                    {notification.timestamp}
+                  </p>
+                </li>
+              ))
+            )}
           </ul>
         </div>
       )}

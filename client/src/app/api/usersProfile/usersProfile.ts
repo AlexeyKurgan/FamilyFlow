@@ -19,6 +19,7 @@ export interface UserProfile {
     name: string;
     uuid: string;
     last_name: string;
+    family_id: string,
     email: string;
     role: string;
     is_admin: boolean;
@@ -38,6 +39,7 @@ export const fetchUserProfileByUserId = async (
       email,
       role,
       is_admin,
+      family_id,
       profiles (
         id,
         bio_info,

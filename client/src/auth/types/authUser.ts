@@ -20,7 +20,9 @@ export interface IAuthSignUp {
     email: string,
     password: string,
     name: string,
-    last_name: string
+    last_name: string,
+    familyOption: string,
+    familyID: string
 }
 
 export interface ISignIn {

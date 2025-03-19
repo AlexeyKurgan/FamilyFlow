@@ -15,12 +15,16 @@ import IntegrationsPage from "./app/pages/integrations/IntegrationsPage";
 import SettingsPage from "./app/pages/settings/SettingsPage";
 import AchievementPage from "./app/pages/achievement/AchievementPage";
 import RewardsShopPage from "./app/pages/pointstAssignments/RewardsShopPage";
-import { checkUserSession } from "./auth/api/utils/userUtils";
+import {
+  checkUserSession,
+  loadSessionAndProfile,
+} from "./auth/api/utils/userUtils";
 import { setSession } from "./store/slices/authSlice";
 import { useAppDispatch } from "./shared/hooks/hooks";
 import { AuthChangeEvent, Session } from "@supabase/supabase-js";
 import { supabase } from "./auth/constants/supabaseConfig";
 import LayoutModal from "./shared/components/modal/LayoutModal";
+import { fetchUserProfile } from "./store/slices/profileSlice";
 
 // Lazy loading
 // Landing Pages
@@ -49,6 +53,8 @@ function App() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    loadSessionAndProfile(dispatch);
+
     const fetchSession = async () => {
       const currentSession = await checkUserSession();
       if (currentSession) {
@@ -62,6 +68,7 @@ function App() {
       (event: AuthChangeEvent, session: Session | null) => {
         if (session) {
           dispatch(setSession(session));
+          dispatch(fetchUserProfile({ user_uuid: session.user.id }));
           console.log(event);
         } else {
           dispatch(setSession(null));

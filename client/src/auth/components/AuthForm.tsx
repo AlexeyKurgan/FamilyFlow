@@ -1,10 +1,21 @@
 import IAuthMode from "../types/authMode";
 import {
   Box,
+  // Checkbox,
+  FormControl,
+  // FormControlLabel,
+  FormLabel,
   IconButton,
   InputAdornment,
   inputBaseClasses,
+  List,
+  ListItem,
+  ListItemIcon,
+  // InputLabel,
+  Radio,
+  RadioGroup,
   TextField,
+  Typography,
 } from "@mui/material";
 
 import {
@@ -13,6 +24,9 @@ import {
   FaEye,
   FaEyeSlash,
   FaUser,
+  FaIdCard,
+  FaUserPlus,
+  FaUsers,
 } from "../../shared/react-icons/icons";
 
 import { useFormik } from "formik";
@@ -46,15 +60,20 @@ const AuthForm = ({ mode }: IAuthMode) => {
       lastName: "",
       password: "",
       email: "",
+      familyOption: "",
+      familyId: "",
     },
     onSubmit: async (values) => {
       if (currentMode === AuthMode.SIGN_UP) {
+        console.log("values", values);
         const result = await dispatch(
           signUpUser({
             email: values.email,
             password: values.password,
             name: values.name,
             last_name: values.lastName,
+            familyOption: values.familyOption,
+            familyID: values.familyId,
           })
         );
 
@@ -308,12 +327,110 @@ const AuthForm = ({ mode }: IAuthMode) => {
         </>
       )}
       {currentMode === AuthMode.SIGN_UP && (
-        <Button
-          className="justify-center bg-amber-400 w-56 hover:scale-[1.1]"
-          type="submit"
-        >
-          {t("SignUp")}
-        </Button>
+        <div className="flex flex-col gap-3">
+          <FormControl className="!flex border-2">
+            <FormLabel
+              sx={{
+                color: "#ffb900",
+                "&.Mui-focused": { color: "#ffb900" },
+              }}
+              component="legend"
+            >
+              Family Options
+            </FormLabel>
+
+            <RadioGroup
+              name="familyOption"
+              value={formik.values.familyOption}
+              onChange={formik.handleChange}
+            >
+              <List sx={{ minWidth: 240, gap: "0.5rem", p: 0 }}>
+                {[
+                  {
+                    label: "Create new family",
+                    value: "create",
+                    icon: <FaUserPlus className="text-amber-400" size={20} />,
+                  },
+                  {
+                    label: "Join existing family",
+                    value: "join",
+                    icon: <FaUsers className="text-amber-400" size={20} />,
+                  },
+                ].map((item) => (
+                  <ListItem
+                    key={item.value}
+                    sx={{
+                      border: "2px solid #ffb900",
+                      marginBottom: "10px",
+                      borderRadius: "8px",
+                      p: "0.5rem",
+                      transition: "all 0.3s",
+                      ...(formik.values.familyOption === item.value && {
+                        borderColor: "#ffb900",
+                        backgroundColor: "rgba(255, 185, 0, 0.1)",
+                      }),
+                    }}
+                    onClick={() =>
+                      formik.setFieldValue("familyOption", item.value)
+                    }
+                  >
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <Typography sx={{ flexGrow: 1 }}>{item.label}</Typography>
+                    <Radio
+                      value={item.value}
+                      checked={formik.values.familyOption === item.value}
+                      onChange={formik.handleChange}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </RadioGroup>
+          </FormControl>
+
+          {formik.values.familyOption === "join" && (
+            <TextField
+              name="familyId"
+              label="Enter Family ID"
+              value={formik.values.familyId}
+              onChange={formik.handleChange}
+              variant="outlined"
+              sx={{
+                "& label.Mui-focused": { color: "black" },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": { borderColor: "#ffb900" },
+                  "&:hover fieldset": { borderColor: "black" },
+                  "&.Mui-focused fieldset": { borderColor: "#ffb900" },
+                },
+              }}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment
+                      position="start"
+                      sx={{
+                        opacity: 0,
+                        pointerEvents: "none",
+                        [`[data-shrink=true] ~ .${inputBaseClasses.root} > &`]:
+                          {
+                            opacity: 1,
+                          },
+                      }}
+                    >
+                      <FaIdCard className="text-amber-400" size={20} />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          )}
+
+          <Button
+            className="justify-center bg-amber-400 w-56 hover:scale-[1.1]"
+            type="submit"
+          >
+            {t("SignUp")}
+          </Button>
+        </div>
       )}
       {currentMode === AuthMode.FORGOT_PASSWORD && (
         <Button

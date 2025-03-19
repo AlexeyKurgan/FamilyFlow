@@ -1,5 +1,4 @@
 import { ComponentType } from "react";
-// import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -41,15 +40,14 @@ const CustomModal = <T,>({
 }: ICustomModalProps<T>) => {
   const dispatch = useAppDispatch();
 
-  const handleSubmit = () => {
+  const handleClose = () => {
+    dispatch(hideModal());
+  };
+
+  const handleSubmitLocal = () => {
     if (onSubmit) {
       onSubmit();
     }
-    handleClose();
-  };
-
-  const handleClose = () => {
-    dispatch(hideModal());
   };
 
   return (
@@ -83,23 +81,16 @@ const CustomModal = <T,>({
       </DialogContent>
       <DialogActions className="dialog-actions">
         <Button
-          className="text-lg 
-                font-bold bg-amber-400 
-                justify-center
-                hover:scale-[1.1] max-w-[90px]"
+          className="text-lg font-bold bg-amber-400 justify-center hover:scale-[1.1] max-w-[90px]"
           type="button"
           onClick={handleClose}
         >
           {cancelText}
         </Button>
         <Button
-          className="text-lg 
-                font-bold bg-black
-                text-amber-400
-                justify-center 
-                hover:scale-[1.1] max-w-[90px]"
+          className="text-lg font-bold bg-black text-amber-400 justify-center hover:scale-[1.1] max-w-[90px]"
           type="button"
-          onClick={handleSubmit}
+          onClick={handleSubmitLocal}
         >
           {submitText}
         </Button>

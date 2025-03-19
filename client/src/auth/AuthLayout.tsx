@@ -9,7 +9,7 @@ const AuthLayout = () => {
 
   return (
     <>
-      <div className="h-[calc(100vh-20px)] max-sm:h-[calc(100vh-100px)]">
+      <div className="h-[calc(100vh-0px)] max-sm:h-[calc(100vh-100px)]">
         <Outlet />
       </div>
     </>

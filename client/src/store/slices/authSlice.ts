@@ -9,14 +9,16 @@ const initialState: IAuthState = {
     last_name: '',
     email: '',
     password: '',
+    familyOption: '',
+    familyID: '',
     loading: false,
     error: null,
     session: null as Session | null
 }
 
-export const signUpUser = createAsyncThunk<UserData | null, IAuthSignUp>('auth/sign_up', async ({ email, password, name, last_name }: IAuthSignUp, { rejectWithValue }) => {
+export const signUpUser = createAsyncThunk<UserData | null, IAuthSignUp>('auth/sign_up', async ({ email, password, name, last_name, familyOption, familyID }: IAuthSignUp, { rejectWithValue }) => {
     try {
-        const response = await signUpRequest(email, password, name, last_name);
+        const response = await signUpRequest(email, password, name, last_name, familyOption, familyID);
         return response;
     } catch (error: unknown) {
         if (error instanceof Error) {

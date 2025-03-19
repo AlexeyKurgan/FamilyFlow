@@ -48,6 +48,7 @@
 .base-modal {
   .MuiDialog-paper {
     width: 100%;
+    overflow-x: hidden;
 
     .MuiDialogContent-root {
       padding: 25px;

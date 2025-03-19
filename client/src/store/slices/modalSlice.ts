@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import IModal from "../../shared/types/modal";
+import { IModal } from "../../shared/types/modal";
 
 const initialState: IModal = {
     show: false,

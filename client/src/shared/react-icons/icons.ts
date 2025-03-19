@@ -35,3 +35,13 @@ export { MdNotificationsActive } from "react-icons/md";
 export { FaCircleInfo } from "react-icons/fa6";
 export { TbFlag3Filled } from "react-icons/tb";
 export { FaTableList } from "react-icons/fa6";
+
+export { MdOutlineSubtitles } from "react-icons/md";
+export { FaAudioDescription } from "react-icons/fa";
+export { MdOutlinePriorityHigh } from "react-icons/md";
+export { FaUserEdit } from "react-icons/fa";
+export { MdAssignmentInd } from "react-icons/md";
+
+export { FaIdCard } from "react-icons/fa6";
+export { FaUserPlus } from "react-icons/fa";
+export { FaUsers } from "react-icons/fa6";

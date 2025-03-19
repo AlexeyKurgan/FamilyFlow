@@ -8,6 +8,7 @@ import resourcesReducer from "./slices/resourcesSlice";
 import achievementsReducer from "./slices/achievementsSlice";
 import userProfileReducer from "./slices/profileSlice";
 import modalReducer from "./slices/modalSlice";
+import notificationsReducer from "./slices/notificationsSlice";
 
 export const store = configureStore(
     {
@@ -20,7 +21,8 @@ export const store = configureStore(
             resources: resourcesReducer,
             achievements: achievementsReducer,
             profile: userProfileReducer,
-            modal: modalReducer
+            modal: modalReducer,
+            notifications: notificationsReducer
         }
     }
 )
