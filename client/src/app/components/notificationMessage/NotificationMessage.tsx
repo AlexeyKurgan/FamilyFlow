@@ -13,12 +13,13 @@ const NotificationMessage = ({ isPanelShow }: NotificationMessageProps) => {
   const notifications = useSelector(
     (state: RootState) => state.notifications.notifications
   );
+  const { session } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
-    if (isPanelShow) {
-      dispatch(markAllNotificationsAsRead());
+    if (isPanelShow && session?.user.id) {
+      dispatch(markAllNotificationsAsRead(session.user.id));
     }
-  }, [isPanelShow, dispatch]);
+  }, [isPanelShow, dispatch, session?.user.id]);
 
   return (
     <>
@@ -30,7 +31,7 @@ const NotificationMessage = ({ isPanelShow }: NotificationMessageProps) => {
           <ul className="text-[.8em] h-full font-bold list-none border-2 border-amber-400 scrollbar overflow-auto">
             {notifications.length === 0 ? (
               <li className="text-amber-400 text-center p-4">
-                no notifications
+                Нет уведомлений
               </li>
             ) : (
               notifications.map((notification, index) => (

@@ -17,7 +17,10 @@ import { useEffect, useState, useRef } from "react";
 import NotificationMessage from "../notificationMessage/NotificationMessage";
 import { supabase } from "../../../auth/constants/supabaseConfig";
 import { Task } from "../../../app/api/tasks/tasksRequest";
-import { addNotification } from "../../../store/slices/notificationsSlice";
+import {
+  addNotification,
+  loadNotifications,
+} from "../../../store/slices/notificationsSlice";
 import { RealtimeChannel } from "@supabase/supabase-js";
 
 interface HeaderProps {
@@ -53,6 +56,10 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
       return;
     }
 
+    dispatch(loadNotifications(session.user.id));
+
+    console.log("Subscribing for user ID:", session.user.id);
+
     const subscribeToTasks = () => {
       if (subscriptionRef.current) {
         supabase.removeChannel(subscriptionRef.current);
@@ -71,16 +78,17 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
           },
           (payload) => {
             const newTask = payload.new as Task;
-            console.log("New task received:", newTask);
-            console.log("Current user ID:", session.user.id);
             if (newTask.assigned_to === session.user.id) {
               dispatch(
                 addNotification({
-                  id: newTask.id,
-                  title: newTask.title,
-                  message: `New task assigned: ${newTask.title}`,
-                  timestamp: new Date().toLocaleString(),
-                  created_at: new Date().toISOString(),
+                  notification: {
+                    id: newTask.id,
+                    title: newTask.title,
+                    message: `New task assigned: ${newTask.title}`,
+                    timestamp: new Date().toLocaleString(),
+                    created_at: new Date().toISOString(),
+                  },
+                  userId: session.user.id,
                 })
               );
             }
@@ -99,11 +107,14 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
             if (updatedTask.assigned_to === session.user.id) {
               dispatch(
                 addNotification({
-                  id: updatedTask.id,
-                  title: updatedTask.title,
-                  message: `Task updated: ${updatedTask.title}`,
-                  timestamp: new Date().toLocaleString(),
-                  created_at: new Date().toISOString(),
+                  notification: {
+                    id: updatedTask.id,
+                    title: updatedTask.title,
+                    message: `Task updated: ${updatedTask.title}`,
+                    timestamp: new Date().toLocaleString(),
+                    created_at: new Date().toISOString(),
+                  },
+                  userId: session.user.id,
                 })
               );
             }
@@ -122,11 +133,14 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
             if (deletedTask.creator_id === session.user.id) {
               dispatch(
                 addNotification({
-                  id: deletedTask.id,
-                  title: deletedTask.title,
-                  message: `Task was deleted: ${deletedTask.title}`,
-                  timestamp: new Date().toLocaleString(),
-                  created_at: new Date().toISOString(),
+                  notification: {
+                    id: deletedTask.id,
+                    title: deletedTask.title,
+                    message: `Task was deleted: ${deletedTask.title}`,
+                    timestamp: new Date().toLocaleString(),
+                    created_at: new Date().toISOString(),
+                  },
+                  userId: session.user.id,
                 })
               );
             }
