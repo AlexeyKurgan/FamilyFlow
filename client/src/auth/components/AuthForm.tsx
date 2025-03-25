@@ -60,12 +60,11 @@ const AuthForm = ({ mode }: IAuthMode) => {
       lastName: "",
       password: "",
       email: "",
-      familyOption: "",
+      familyOption: "create",
       familyId: "",
     },
     onSubmit: async (values) => {
       if (currentMode === AuthMode.SIGN_UP) {
-        console.log("values", values);
         const result = await dispatch(
           signUpUser({
             email: values.email,

@@ -58,8 +58,6 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
 
     dispatch(loadNotifications(session.user.id));
 
-    console.log("Subscribing for user ID:", session.user.id);
-
     const subscribeToTasks = () => {
       if (subscriptionRef.current) {
         supabase.removeChannel(subscriptionRef.current);
@@ -147,10 +145,13 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
           }
         )
         .subscribe((status) => {
-          if (status === "SUBSCRIBED") {
-            console.log("Successfully subscribed to tasks-channel");
-          } else if (status === "CHANNEL_ERROR") {
-            console.error("Channel error occurred, attempting to resubscribe");
+          if (status === "CHANNEL_ERROR") {
+            dispatch(
+              showAlert({
+                message: "Channel error occurred, attempting to resubscribe",
+                severity: "error",
+              })
+            );
             subscriptionRef.current?.unsubscribe();
             subscribeToTasks();
           }
@@ -247,13 +248,6 @@ const Header = ({ onAvatarClick, onMenuClose, anchorEl }: HeaderProps) => {
             to="/dashboard/profile"
           >
             {t("Profile")}
-          </MenuItem>
-          <MenuItem
-            className="item-menu"
-            component={Link}
-            to="/dashboard/settings"
-          >
-            {t("Settings")}
           </MenuItem>
           <MenuItem className="item-menu" onClick={handleLogout}>
             {t("Logout")}

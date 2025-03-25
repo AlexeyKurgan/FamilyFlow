@@ -3,7 +3,7 @@ import { IAuthFormValues, IAuthFormErrors } from "../../auth/types/authFormValid
 
 export const validateAuthForm = (values: IAuthFormValues, mode: AuthMode, t: (key: string) => string): IAuthFormErrors => {
 
-    const errors: IAuthFormErrors = {};
+    const errors = {} as IAuthFormErrors;
     const currentMode = mode || (location.pathname.replace("/", "") as AuthMode);
 
     if (currentMode === AuthMode.SIGN_UP) {

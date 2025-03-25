@@ -2,8 +2,7 @@ import Resources from "../../components/resources/Resources";
 
 const ResourcesPage = () => {
   return (
-    <div className="app-content">
-      <h2>ResourcesPage</h2>
+    <div className="flex flex-col px-[24px] py-[24px] pt-0 gap-4">
       <Resources />
     </div>
   );

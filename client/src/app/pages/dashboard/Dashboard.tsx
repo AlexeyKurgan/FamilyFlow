@@ -1,13 +1,7 @@
 import styles from "./Dashboard.module.scss";
 import { Link } from "react-router-dom";
 
-import {
-  MdTaskAlt,
-  MdLink,
-  MdBook,
-  MdStorefront,
-  MdWavingHand,
-} from "react-icons/md";
+import { MdTaskAlt, MdLink, MdBook, MdWavingHand } from "react-icons/md";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { useCallback, useEffect, useState } from "react";
 import Date from "../../../shared/components/date/Date";
@@ -115,7 +109,7 @@ export const Dashboard = () => {
 
   return (
     <div className={`app-content ${styles.dashboardContent}`}>
-      <div className={`${styles.row}`}>
+      <section className={`${styles.row}`}>
         <h1 className="text-[2.3em]">Dashboard</h1>
         <CustomTooltip
           className=""
@@ -125,7 +119,7 @@ export const Dashboard = () => {
         >
           <FaCircleInfo size={25} />
         </CustomTooltip>
-      </div>
+      </section>
       <section className={`${styles.row}`}>
         <Date classNames={`dateCard`} />
       </section>
@@ -193,7 +187,7 @@ export const Dashboard = () => {
               {displayedTasks.map((task) => (
                 <li className="flex justify-between items-center" key={task.id}>
                   <span>{task.title}</span>
-                  <span className="flex">
+                  <span className="flex min-w-[106px] justify-between">
                     <TbFlag3Filled
                       size={25}
                       className={clsx(
@@ -353,25 +347,6 @@ export const Dashboard = () => {
           )}
           <Link to="/dashboard/resources" className={styles.navButton}>
             Go to Resources
-          </Link>
-        </Card>
-      </section>
-      <section className={`${styles.row}`}>
-        <Card>
-          <div className={`flex items-center ${styles.cardIcon}`}>
-            <MdStorefront size={48} color="#f4c430" className="mr-5" />
-            <h2>Rewards Shop</h2>
-          </div>
-
-          <p>Earn points and redeem rewards!</p>
-          <div className="w-full my-[10px] h-[250px] min-h-[250px] overflow-hidden">
-            <img
-              src="https://ayrkflghtzmabklwrpap.supabase.co/storage/v1/object/sign/Rewards%20images/Reward-Blog.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJSZXdhcmRzIGltYWdlcy9SZXdhcmQtQmxvZy5wbmciLCJpYXQiOjE3NDE0MzI0NjEsImV4cCI6MTc3Mjk2ODQ2MX0.wDxKTTjocW_FlivK_0fNgAHHJaSjkA2YOz94TCRZFVY"
-              alt="rewards image background"
-            />
-          </div>
-          <Link to="/dashboard/rewards" className={styles.navButton}>
-            Visit Shop
           </Link>
         </Card>
       </section>

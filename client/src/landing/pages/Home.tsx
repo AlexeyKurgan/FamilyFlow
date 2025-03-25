@@ -7,9 +7,14 @@ import PlaneSVG from "../components/icons/Plane";
 import LineDecorSVG from "../components/icons/LineDecor";
 import { GoArrowRight } from "../../shared/react-icons/icons";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const navigateToSignUp = () => {
+    navigate("/auth/sign-up");
+  };
 
   return (
     <section className="relative">
@@ -32,6 +37,7 @@ const Home = () => {
             </p>
             <div className="w-[220px] p-5 relative max-sm:flex max-sm:justify-center max-sm:w-full">
               <Button
+                onClick={navigateToSignUp}
                 type="button"
                 className="text-lg font-bold bg-amber-400 
                                 hover:scale-[1.1] pl-7 justify-start relative max-sm:max-w-[180px]"

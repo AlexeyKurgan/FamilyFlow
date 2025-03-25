@@ -20,6 +20,8 @@ import { supabase } from "../../../../auth/constants/supabaseConfig";
 import { ClipLoader } from "react-spinners";
 import { fetchFamilyMembers } from "../../../../auth/api/utils/userUtils";
 import { IAddTaskModalProps } from "../../../types/modal";
+import { useTranslation } from "react-i18next";
+import { taskFormValidation } from "../../../utils/taskValidation";
 
 export interface IFormikValues {
   title: string;
@@ -39,6 +41,7 @@ export interface User {
 const AddTaskModal = ({ onSubmit, onFormSubmit }: IAddTaskModalProps) => {
   const [familyMembers, setFamilyMembers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const loadFamilyMembers = async () => {
@@ -74,6 +77,7 @@ const AddTaskModal = ({ onSubmit, onFormSubmit }: IAddTaskModalProps) => {
         console.error("Failed to prepare task data:", error);
       }
     },
+    validate: (values) => taskFormValidation(values, t),
   });
 
   if (onFormSubmit) {
@@ -94,6 +98,8 @@ const AddTaskModal = ({ onSubmit, onFormSubmit }: IAddTaskModalProps) => {
           id="title"
           type="text"
           value={formik.values.title}
+          error={formik.touched.title && Boolean(formik.errors.title)}
+          helperText={formik.touched.title && formik.errors.title}
           onChange={formik.handleChange}
           variant="outlined"
           sx={{
@@ -125,6 +131,10 @@ const AddTaskModal = ({ onSubmit, onFormSubmit }: IAddTaskModalProps) => {
           rows={7}
           placeholder="Task description"
           value={formik.values.description}
+          error={
+            formik.touched.description && Boolean(formik.errors.description)
+          }
+          helperText={formik.touched.description && formik.errors.description}
           onChange={formik.handleChange}
           variant="outlined"
           sx={{
@@ -138,7 +148,9 @@ const AddTaskModal = ({ onSubmit, onFormSubmit }: IAddTaskModalProps) => {
         />
       </FormControl>
 
-      <FormControl>
+      <FormControl
+        error={formik.touched.priority && Boolean(formik.errors.priority)}
+      >
         <FormLabel id="priority">Priority</FormLabel>
         <RadioGroup
           row
@@ -153,9 +165,14 @@ const AddTaskModal = ({ onSubmit, onFormSubmit }: IAddTaskModalProps) => {
           <FormControlLabel value="normal" control={<Radio />} label="Normal" />
           <FormControlLabel value="low" control={<Radio />} label="Low" />
         </RadioGroup>
+        {formik.touched.priority && formik.errors.priority && (
+          <Box color="error.main">{formik.errors.priority}</Box>
+        )}
       </FormControl>
 
-      <FormControl>
+      <FormControl
+        error={formik.touched.status && Boolean(formik.errors.status)}
+      >
         <FormLabel id="status">Status</FormLabel>
         <RadioGroup
           row
@@ -180,9 +197,13 @@ const AddTaskModal = ({ onSubmit, onFormSubmit }: IAddTaskModalProps) => {
             label="Complete"
           />
         </RadioGroup>
+        {formik.touched.status && formik.errors.status && (
+          <Box color="error.main">{formik.errors.status}</Box>
+        )}
       </FormControl>
 
       <FormControl
+        error={formik.touched.assigned_to && Boolean(formik.errors.assigned_to)}
         sx={{
           "& label.Mui-focused": { color: "#ffb900" },
           "& .MuiOutlinedInput-root": {
@@ -236,6 +257,9 @@ const AddTaskModal = ({ onSubmit, onFormSubmit }: IAddTaskModalProps) => {
             ))
           )}
         </Select>
+        {formik.touched.assigned_to && formik.errors.assigned_to && (
+          <Box color="error.main">{formik.errors.assigned_to}</Box>
+        )}
       </FormControl>
     </Box>
   );

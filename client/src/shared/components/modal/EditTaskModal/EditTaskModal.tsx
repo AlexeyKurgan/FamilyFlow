@@ -22,7 +22,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/store";
 import { Task } from "../../../../app/api/tasks/tasksRequest";
 import { IEditTaskModalProps } from "../../../types/modal";
-
+import { useTranslation } from "react-i18next";
+import { taskFormValidation } from "../../../utils/taskValidation";
 interface IFormikValues {
   title: string;
   description: string;
@@ -47,6 +48,7 @@ const EditTaskModal = ({
   const [loading, setLoading] = useState(false);
   const tasks = useSelector((state: RootState) => state.tasks.tasks);
   const currentTask = tasks?.find((task: Task) => task.id === taskId);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const loadFamilyMembers = async () => {
@@ -78,6 +80,7 @@ const EditTaskModal = ({
         await onSubmit({ ...values, id: taskId });
       }
     },
+    validate: (values) => taskFormValidation(values, t),
   });
 
   if (onFormSubmit) {
@@ -98,6 +101,8 @@ const EditTaskModal = ({
           id="title"
           type="text"
           value={formik.values.title}
+          error={formik.touched.title && Boolean(formik.errors.title)}
+          helperText={formik.touched.title && formik.errors.title}
           onChange={formik.handleChange}
           variant="outlined"
           sx={{
@@ -129,6 +134,10 @@ const EditTaskModal = ({
           rows={7}
           placeholder="Task description"
           value={formik.values.description}
+          error={
+            formik.touched.description && Boolean(formik.errors.description)
+          }
+          helperText={formik.touched.description && formik.errors.description}
           onChange={formik.handleChange}
           variant="outlined"
           sx={{
@@ -142,7 +151,9 @@ const EditTaskModal = ({
         />
       </FormControl>
 
-      <FormControl>
+      <FormControl
+        error={formik.touched.priority && Boolean(formik.errors.priority)}
+      >
         <FormLabel id="priority">Priority</FormLabel>
         <RadioGroup
           row
@@ -157,9 +168,14 @@ const EditTaskModal = ({
           <FormControlLabel value="normal" control={<Radio />} label="Normal" />
           <FormControlLabel value="low" control={<Radio />} label="Low" />
         </RadioGroup>
+        {formik.touched.priority && formik.errors.priority && (
+          <Box color="error.main">{formik.errors.priority}</Box>
+        )}
       </FormControl>
 
-      <FormControl>
+      <FormControl
+        error={formik.touched.status && Boolean(formik.errors.status)}
+      >
         <FormLabel id="status">Status</FormLabel>
         <RadioGroup
           row
@@ -184,9 +200,13 @@ const EditTaskModal = ({
             label="Complete"
           />
         </RadioGroup>
+        {formik.touched.status && formik.errors.status && (
+          <Box color="error.main">{formik.errors.status}</Box>
+        )}
       </FormControl>
 
       <FormControl
+        error={formik.touched.assigned_to && Boolean(formik.errors.assigned_to)}
         sx={{
           "& label.Mui-focused": { color: "#ffb900" },
           "& .MuiOutlinedInput-root": {
@@ -240,6 +260,9 @@ const EditTaskModal = ({
             ))
           )}
         </Select>
+        {formik.touched.assigned_to && formik.errors.assigned_to && (
+          <Box color="error.main">{formik.errors.assigned_to}</Box>
+        )}
       </FormControl>
     </Box>
   );

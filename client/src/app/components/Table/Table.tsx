@@ -138,7 +138,7 @@ const Table = () => {
         <span className="flex items-center">Priority</span>
         <span className="flex items-center">Creator Name</span>
         <span className="flex items-center">Assigned By</span>
-        <span className="flex items-center">created_at</span>
+        <span className="flex items-center">Created At</span>
         <span></span>
         <span></span>
       </div>
@@ -262,8 +262,8 @@ const Table = () => {
         )}
       </div>
       {/* Table Pagination */}
-      <div className="flex justify-center relative gap-2 mt-4">
-        <div className="flex absolute bottom-[10px] left-[25px]">
+      <div className="flex justify-center relative gap-2 mt-4 p-2.5">
+        <div className="flex absolute bottom-[20px] left-[25px]">
           <FaTableList size={25} className="text-amber-400 mr-3.5" />
           <p>
             Total Tasks:{" "}
@@ -272,24 +272,27 @@ const Table = () => {
             </span>
           </p>
         </div>
-        <button
-          className="cursor-pointer px-4 py-2 bg-gray-700 text-white rounded disabled:opacity-50"
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage(currentPage - 1)}
-        >
-          Prev
-        </button>
-        <span className="text-white">
-          {currentPage} / {totalPages}
-        </span>
-        <button
-          className="cursor-pointer px-4 py-2 bg-gray-700 text-white rounded disabled:opacity-50"
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage(currentPage + 1)}
-        >
-          Next
-        </button>
-        <div className="absolute bottom-[0px] right-[14px]">
+        <div className="flex items-center gap-3">
+          <button
+            className="cursor-pointer px-4 py-2 bg-gray-700 text-white rounded disabled:opacity-50"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            Prev
+          </button>
+          <span className="text-white">
+            {currentPage} / {totalPages}
+          </span>
+          <button
+            className="cursor-pointer px-4 py-2 bg-gray-700 text-white rounded disabled:opacity-50"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+
+        <div className="absolute bottom-[10px] right-[14px]">
           <div className="absolute right-[7px] flex">
             <div className="absolute top-0 left-0 size-3 max-h-[12px] inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></div>
             <div className="relative inline-flex justify-end size-3 rounded-full bg-amber-600"></div>

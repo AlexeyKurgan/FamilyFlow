@@ -6,8 +6,8 @@ export interface IAuthFormValues {
 }
 
 export interface IAuthFormErrors {
-    name?: string;
-    lastName?: string;
-    email?: string;
-    password?: string;
+    name: string;
+    lastName: string;
+    email: string;
+    password: string;
 }

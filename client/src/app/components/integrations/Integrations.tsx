@@ -1,26 +1,19 @@
-import styles from "./Integrations.module.scss";
-import { MdLink } from "react-icons/md";
+import { FaCircleInfo } from "react-icons/fa6";
+import CustomTooltip from "../../../shared/components/tooltip/Tooltip";
 
 export const Integrations = () => {
   return (
-    <div className={`app-content ${styles.integrationsContent}`}>
-      <section className={styles.integrationHeader}>
-        <article className={styles.card}>
-          <div className={`flex items-start ${styles.cardIcon}`}>
-            <h2 className="mr-5">Family Integrations</h2>
-            <MdLink size={48} color="#9b59b6" />
-          </div>
-
-          <p>Connect services to enhance family productivity</p>
-        </article>
-      </section>
-      <section className="integration-row">
-        <article>1</article>
-        <article>2</article>
-        <article>3</article>
-        <article>4</article>
-        <article>5</article>
-        <article>6</article>
+    <div className="flex flex-col px-[24px] py-[24px] pt-0 gap-4">
+      <section className="flex items-center">
+        <h1 className="text-[2.3em]">Integrations</h1>
+        <CustomTooltip
+          className=""
+          placement="top"
+          title={"INFO"}
+          component={"button"}
+        >
+          <FaCircleInfo size={25} />
+        </CustomTooltip>
       </section>
     </div>
   );

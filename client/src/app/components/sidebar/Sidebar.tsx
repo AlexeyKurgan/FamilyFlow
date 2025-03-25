@@ -4,10 +4,7 @@ import { Tooltip } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import {
   FaTasks,
-  GrAchievement,
   GrResources,
-  IoMdSettings,
-  IoStorefront,
   MdDashboard,
   MdIntegrationInstructions,
   RiArrowLeftDoubleLine,
@@ -39,21 +36,6 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
       path: "/dashboard/resources",
       title: t("Resources"),
       icon: <GrResources />,
-    },
-    {
-      path: "/dashboard/achievement",
-      title: t("Achievement"),
-      icon: <GrAchievement />,
-    },
-    {
-      path: "/dashboard/rewards_shop",
-      title: t("Rewards shop"),
-      icon: <IoStorefront />,
-    },
-    {
-      path: "/dashboard/settings",
-      title: t("Settings"),
-      icon: <IoMdSettings />,
     },
   ];
 
